@@ -189,7 +189,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <div class="btns">
         <button class="btn primary" id="dlLines" type="button" title="One row per line currently on the map; row 1 records the settings above">Lines</button>
         <button class="btn" id="dlHosp" type="button" title="One row per hospital in the chosen set, with its lines at the chosen distance counted by category">Hospitals</button>
-        <button class="btn" id="dlNaim" type="button" title="נעים בסופ&quot;ש: the partner's mapping of the free municipal weekend routes, with the geocoded ends">נעים</button>
+        <button class="btn" id="dlNaim" type="button" title="נעים בסופ״ש: the partner's mapping of the free municipal weekend routes, with the geocoded ends">נעים</button>
       </div>
       <p class="note" id="dlnote"></p>
     </section>
@@ -215,7 +215,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
   </div>
 
   <aside class="insp">
-    <p class="empty" id="inspEmpty">Click a line for its route, license status and Friday and Saturday departures. Click a hospital marker for every line that reaches it, or a dashed corridor for a <span class="he">נעים בסופ"ש</span> route.</p>
+    <p class="empty" id="inspEmpty">Click a line for its route, license status and Friday and Saturday departures. Click a hospital marker for every line that reaches it, or a dashed corridor for a <span class="he">נעים בסופ״ש</span> route.</p>
     <div id="insp"></div>
   </aside>
 </div>
@@ -230,14 +230,14 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <p><span class="k" style="background:var(--after)"></span><b>After nightfall</b> &mdash; licensed; every Saturday bus departs after Shabbat ends.</p>
       <p><span class="k" style="background:var(--nopermit)"></span><b>Qualifies, never licensed</b> &mdash; reaches a hospital or a town whose residents are not Jewish; not on the license list.</p>
       <p><span class="k" style="background:var(--hosp)"></span><b>Hospital</b> &mdash; one marker per hospital; filled = on the Ministry of Health list, pale = other hospitals with a stop named for them. A line reaches a hospital when it stops at a stop named for it, or within the sidebar's straight-line distance of it.</p>
-      <p><span class="k" style="background:#7A3E9D"></span><b><span class="he">נעים בסופ"ש</span></b> &mdash; free municipal weekend routes, drawn as straight corridors between their two ends [11]; not licensed lines and not in the national timetable.</p>
+      <p><span class="k" style="background:#7A3E9D"></span><b><span class="he">נעים בסופ״ש</span></b> &mdash; free municipal weekend routes, drawn as straight corridors between their two ends [11]; not licensed lines and not in the national timetable.</p>
       <p>All bands recompute from the Shabbat window in the sidebar. Defaults are Hebcal's Tel Aviv times for the anchor dates [7].</p>
     </div>
     <div class="card">
       <h2>Method</h2>
       <ul>
-        <li><b>Line identity</b> is the MOT catalogue number (<span class="he">מק"ט</span>), the first field of GTFS <code>route_desc</code>; stable across snapshots where <code>route_id</code> is not.</li>
-        <li><b>License</b>: the <span class="he">מק"ט</span> appears in the ministry's November 2025 sheet with the Saturday (<span class="he">ש</span>) flag [2].</li>
+        <li><b>Line identity</b> is the MOT catalogue number (<span class="he">מק״ט</span>), the first field of GTFS <code>route_desc</code>; stable across snapshots where <code>route_id</code> is not.</li>
+        <li><b>License</b>: the <span class="he">מק״ט</span> appears in the ministry's November 2025 sheet with the Saturday (<span class="he">ש</span>) flag [2].</li>
         <li><b>Service</b>: GTFS trips whose calendar contains the anchor date, counted once per date [3]. Summing across the feed double-counts, because MOT republishes the same buses under new schedule IDs.</li>
         <li><b>Hospital</b>: a hand-checked registry of 60 hospitals [8] &mdash; the 45 on the Ministry of Health list [10] plus 15 others (geriatric, psychiatric, East Jerusalem, a military hospital, an outpatient centre) that have a bus stop named for them. Each has a point: the OpenStreetMap hospital outline for 54 [12], the centre of its named stops for 5, a street address for 1. Stops are matched by name (hospital marker or known name, in the hospital's own city; street stops on <span class="he">דרך שיבא</span> excluded) and by straight-line distance from the point, 0&ndash;500 m, chosen in the sidebar. Default: the Ministry list, named stops only.</li>
         <li><b>Route</b>: the towns a line passes, in order, from the stops of its fullest trip (GTFS <code>stop_desc</code> "<span class="he">עיר</span>"), for the direction drawn.</li>
@@ -251,16 +251,16 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
         <li>Service means a <b>published timetable</b>, not an observed bus.</li>
         <li>One weekend of timetable (29&ndash;30 May 2026) against a license list dated November 2025. Not a trend.</li>
         <li>Shabbat times are one national pair; local values differ by up to ~25 minutes (Jerusalem candle-lighting 18:57). Change them in the sidebar.</li>
-        <li>Free municipal Saturday services (<span class="he">נעים בסופ"ש</span>) are absent from the national feed: no fare, so not a "service line" in law.</li>
+        <li>Free municipal Saturday services (<span class="he">נעים בסופ״ש</span>) are absent from the national feed: no fare, so not a "service line" in law.</li>
         <li>The ministry records which exception each license rests on and disclosed the breakdown in 2016 [5]; <b>that field is absent from the 2025 release</b> (its note column is empty in all 410 rows). "Qualifying through" in the sidebar is therefore inferred from where a route goes, never read from the license.</li>
-        <li>The <span class="he">נעים בסופ"ש</span> corridors are the partner's mapping [11], drawn as straight lines between the two ends; the geocoding of each end is recorded in the export.</li>
+        <li>The <span class="he">נעים בסופ״ש</span> corridors are the partner's mapping [11], drawn as straight lines between the two ends; the geocoding of each end is recorded in the export.</li>
       </ul>
     </div>
   </div>
   <section class="refs">
     <h2>Sources</h2>
     <ol>
-      <li><b>Regulation.</b> <span class="he">תקנות התעבורה, תשכ"א-1961, תקנה 386א</span>, inserted by <span class="he">תק' (מס' 1) תשנ"ב-1991</span>; grandfather date 1 January 1991. Consolidated text, Nevo: <code>https://www.nevo.co.il/law_word/law01/p230_011.doc</code>.</li>
+      <li><b>Regulation.</b> <span class="he">תקנות התעבורה, תשכ״א-1961, תקנה 386א</span>, inserted by <span class="he">תק' (מס' 1) תשנ״ב-1991</span>; grandfather date 1 January 1991. Consolidated text, Nevo: <code>https://www.nevo.co.il/law_word/law01/p230_011.doc</code>.</li>
       <li><b>License list.</b> Ministry of Transport FOI response, eight snapshots Dec 2018 &ndash; Nov 2025, via <span class="he">התנועה לחופש המידע</span>: <code>https://www.meida.org.il/wp-content/uploads/2025/12/Transportation-on-Saturday.xlsx</code> (sha256 d6a9666c&hellip;). Column <span class="he">ש</span> = licensed for Saturday.</li>
       <li><b>Timetables.</b> MoT national GTFS, feed 2026-05-15, calendar 16 May &ndash; 15 June 2026: <code>https://gtfs.mot.gov.il/gtfsfiles/israel-public-transportation.zip</code>. Geometry from <code>shapes.txt</code>.</li>
       <li><b>Localities.</b> CBS Census 2022 by locality and statistical area; data.gov.il resource <code>9a9e085f-3bc8-41df-b15f-be0daaf99e30</code> (<code>LocalityCode</code>, <code>ReligionHeb</code>, <code>pop_approx</code>).</li>
@@ -270,7 +270,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <li><b>Reference tables and code.</b> Repository <code>reg386a</code>: <code>data/reference/gate1_hospital_stops.csv</code>, <code>out/tables/locality_unmatched_review.csv</code>, <code>DECISIONS.md</code>, <code>src/build/warehouse.py</code>.</li>
       <li><b>Basemap.</b> Roads and built-up areas &copy; OpenStreetMap contributors (ODbL), via Overpass; coastline, borders and inland water: Natural Earth.</li>
       <li><b>Hospital list.</b> The 45 hospitals on the Ministry of Health website, as compiled by the partner (<code>data/raw/partner/moh_hospitals_45.xlsx</code>); registry with stop assignments and OSM references: <code>data/reference/hospital_registry.csv</code>.</li>
-      <li><b><span class="he">נעים בסופ"ש</span> mapping.</b> Partner spreadsheet of 17 routes with ends, hospital served, overlapping licensed lines and weekday alternatives (<code>data/raw/partner/naim_basofash_routes.xlsx</code>); end-point geocoding rules: <code>data/reference/naim_basofash_endpoints.csv</code>.</li>
+      <li><b><span class="he">נעים בסופ״ש</span> mapping.</b> Partner spreadsheet of 17 routes with ends, hospital served, overlapping licensed lines and weekday alternatives (<code>data/raw/partner/naim_basofash_routes.xlsx</code>); end-point geocoding rules: <code>data/reference/naim_basofash_endpoints.csv</code>.</li>
       <li><b>Hospital locations.</b> OpenStreetMap <code>amenity=hospital</code> ways, relations and nodes for Israel, Overpass extract of 16 Sep 2026 (<code>data/raw/partner/osm_hospitals_overpass.json</code>), centre points.</li>
     </ol>
   </section>
@@ -311,7 +311,7 @@ function fromH(h){ var m=Math.round(h*60); return String(Math.floor(m/60)).padSt
 function project(lon,lat){ var r=lat*Math.PI/180; return [(lon+180)/360,(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2]; }
 function bbox(q){ var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; for(var i=0;i<q.length;i++){var p=q[i]; if(p[0]<x0)x0=p[0]; if(p[0]>x1)x1=p[0]; if(p[1]<y0)y0=p[1]; if(p[1]>y1)y1=p[1];} return [x0,y0,x1,y1]; }
 /* Display escaping, plus Hebrew typography: the GTFS writes geresh and gershayim as ASCII
-   apostrophes (בי''ח, ג'ת) and the registry uses a straight quote (רמב"ם). On screen they
+   apostrophes (בי''ח, ג׳ת) and the registry uses a straight quote (רמב״ם). On screen they
    become ׳ and ״; exports keep the source spelling so they still join to the GTFS. */
 function heb(s){ return String(s==null?"":s).replace(/([\u05D0-\u05EA])''/g,"$1\u05F4").replace(/([\u05D0-\u05EA])"(?=[\u05D0-\u05EA])/g,"$1\u05F4").replace(/([\u05D0-\u05EA])'(?=[\u05D0-\u05EA]|\s|$)/g,"$1\u05F3"); }
 function esc(s){return heb(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
@@ -458,7 +458,7 @@ function showTip(list,px,py){ if(!list||!list.length){tipEl.hidden=true;return;}
 function showTipH(h,px,py){ var n=hospLines(h).filter(passes).length; tipEl.innerHTML='<b class="he">'+esc(h.n)+'</b> &nbsp;<span style="color:#7A828C">'+esc(h.c||"")+' &middot; '+n+' line'+(n===1?"":"s")+(SET.radius?' within '+SET.radius+' m':' at its stops')+(h.core?'':' &middot; not on the MoH list')+'</span>'; tipEl.hidden=false;
   var w=cv.clientWidth,hh=cv.clientHeight,bw=tipEl.offsetWidth,bh=tipEl.offsetHeight; tipEl.style.left=Math.min(Math.max(6,px+14),w-bw-6)+"px"; tipEl.style.top=Math.min(Math.max(6,py-bh-10),hh-bh-6)+"px"; }
 
-function showTipN(rt,px,py){ tipEl.innerHTML='<b style="color:'+NAIM_COLOR+'">נעים בסופ"ש '+esc(rt.k)+'</b> &nbsp;<span class="he" style="color:#4A515A">'+esc(rt.a.n)+' &rarr; '+esc(rt.b.n)+'</span>'+(rt.hospital?' <span style="color:#7A828C">&middot; '+esc(rt.hospital)+'</span>':'')+'<div class="more">free municipal weekend bus — schematic corridor, click for the comparison</div>'; tipEl.hidden=false;
+function showTipN(rt,px,py){ tipEl.innerHTML='<b style="color:'+NAIM_COLOR+'">נעים בסופ״ש '+esc(rt.k)+'</b> &nbsp;<span class="he" style="color:#4A515A">'+esc(rt.a.n)+' &rarr; '+esc(rt.b.n)+'</span>'+(rt.hospital?' <span style="color:#7A828C">&middot; '+esc(rt.hospital)+'</span>':'')+'<div class="more">free municipal weekend bus — schematic corridor, click for the comparison</div>'; tipEl.hidden=false;
   var w=cv.clientWidth,hh=cv.clientHeight,bw=tipEl.offsetWidth,bh=tipEl.offsetHeight; tipEl.style.left=Math.min(Math.max(6,px+14),w-bw-6)+"px"; tipEl.style.top=Math.min(Math.max(6,py-bh-10),hh-bh-6)+"px"; }
 
 function timeline(times,day){
@@ -505,7 +505,7 @@ function showPop(l,px,py){
   var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":"")); if(l.nb>0)q.push(l.nb+" military base"+(l.nb>1?"s":""));
   var cs=l.c||[], via=cs.slice(1,-1), route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b>'+(cs.length>1?' &rarr; <b>'+esc(cs[cs.length-1])+'</b>':' <span class="dist">starts and ends in the same town</span>')+(via.length?'<div class="cities">via '+via.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
   var hosp=l.hl&&l.hl.length?'<dt>Hospitals</dt><dd class="tx he">'+l.hl.map(function(id){var d=l.hs[id]; return esc(hospName(id))+' <span class="dist">'+(d?d+' m':'at its stop')+'</span>';}).join("; ")+'</dd>':'';
-  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק"ט '+esc(l.m)+'</span></div>'+
+  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק״ט '+esc(l.m)+'</span></div>'+
     '<span class="pill '+st.key+'">'+esc(st.label)+'</span>'+
     '<dl><dt title="Counted on an ordinary weekday, Wed '+esc(META.anchor_weekday_fmt)+'">Buses, weekday</dt><dd>'+l.wed.toLocaleString("en-US")+'</dd>'+
     '<dt>Buses, Fri</dt><dd>'+(l.fri||[]).length+'</dd><dt>Buses, Sat</dt><dd>'+(l.satT||[]).length+'</dd><dt>During Shabbat</dt><dd>'+l.sh+'</dd>'+
@@ -533,7 +533,7 @@ function lineChips(text){ /* line numbers mentioned in the partner's text, resol
 function showPopN(rt){
   delete popEl.dataset.h; popEl.dataset.n=rt.k;
   var how=function(e){ return e.how==="stop"?"stop "+e.at:e.how==="hospital"?"the hospital "+e.at:"centre of the town's bus stops"; };
-  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button><div class="ttl" style="color:'+NAIM_COLOR+'">נעים בסופ"ש <span class="he">'+esc(rt.k)+'</span></div><div class="op">Free municipal weekend bus &middot; not on the license list, not in the national timetable</div>'+
+  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button><div class="ttl" style="color:'+NAIM_COLOR+'">נעים בסופ״ש <span class="he">'+esc(rt.k)+'</span></div><div class="op">Free municipal weekend bus &middot; not on the license list, not in the national timetable</div>'+
     '<dl><dt>From</dt><dd class="tx he">'+esc(rt.a.n)+'</dd><dt>To</dt><dd class="tx he">'+esc(rt.b.n)+'</dd>'+(rt.hospital?'<dt>Hospital on the way</dt><dd class="tx he">'+esc(rt.hospital)+'</dd>':'')+
     '<dt>Overlapping licensed lines</dt><dd class="tx he">'+esc(rt.overlap||"\u2014")+(rt.overlap_pct?' <span class="dist">'+esc(rt.overlap_pct)+'</span>':'')+lineChips(rt.overlap)+'</dd>'+
     '<dt>Weekday lines between the two</dt><dd class="tx he">'+esc(rt.weekday_lines||"\u2014")+lineChips(rt.weekday_lines)+'</dd></dl>'+
@@ -571,7 +571,7 @@ function renderLayers(){
     html+='<label class="lay"><input type="checkbox" data-k="'+s+'"'+(on[s]?" checked":"")+'><span class="sw" style="background:'+STATUS[s].color+'"></span><span class="t">'+(SHORT[s]||STATUS[s].label)+'<span class="n">'+n[s].toLocaleString("en-US")+'</span></span><span class="d" title="'+DESC[s]+'">'+DESC[s]+'</span></label>'; });
   var nH=hospitals.filter(activeHospital).length;
   html+='<label class="lay"><input type="checkbox" data-k="hospitals"'+(on.hospitals?" checked":"")+'><span class="sw dot" style="background:'+C.hosp+'"></span><span class="t" title="'+(SET.hset==="all"?"Ministry of Health list + others with a named stop":"Ministry of Health list")+(SET.radius?", stops within "+SET.radius+" m":", named stops")+'">Hospitals<span class="n">'+nH+'</span></span></label>';
-  html+='<label class="lay"><input type="checkbox" data-k="naim"'+(on.naim?" checked":"")+'><span class="sw" style="background:'+NAIM_COLOR+';height:0;border-top:3px dashed '+NAIM_COLOR+'"></span><span class="t" title="free municipal weekend buses; drawn as straight corridors between their two ends">נעים בסופ"ש<span class="n">'+naim.length+'</span></span></label>';
+  html+='<label class="lay"><input type="checkbox" data-k="naim"'+(on.naim?" checked":"")+'><span class="sw" style="background:'+NAIM_COLOR+';height:0;border-top:3px dashed '+NAIM_COLOR+'"></span><span class="t" title="free municipal weekend buses; drawn as straight corridors between their two ends">נעים בסופ״ש<span class="n">'+naim.length+'</span></span></label>';
   var el=document.getElementById("layers"); el.innerHTML=html;
 }
 document.getElementById("layers").addEventListener("change",function(e){ var k=e.target.getAttribute("data-k"); if(!k)return; on[k]=e.target.checked;
@@ -652,7 +652,7 @@ function hospCSV(){
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function naimCSV(){
   var cols=["route","from","from_located_by","from_lon","from_lat","to","to_located_by","to_lon","to_lat","hospital","overlapping_licensed_lines","overlap_pct","weekday_lines_between_the_two"];
-  var rows=["# source: partner mapping of נעים בסופ\"ש routes (xlsx); corridors are straight lines between the two ends\n"+cols.join(",")];
+  var rows=["# source: partner mapping of נעים בסופ״ש routes (xlsx); corridors are straight lines between the two ends\n"+cols.join(",")];
   naim.forEach(function(r){ rows.push([r.k,r.a.n,r.a.how+": "+r.a.at,r.a.x,r.a.y,r.b.n,r.b.how+": "+r.b.at,r.b.x,r.b.y,r.hospital||"",r.overlap||"",r.overlap_pct||"",r.weekday_lines||""].map(csvCell).join(",")); });
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function exportCSV(name,text,btn){
