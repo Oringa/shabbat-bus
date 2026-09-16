@@ -310,7 +310,11 @@ function toH(hm){ var a=String(hm).split(":"); return (+a[0])+(+a[1])/60; }
 function fromH(h){ var m=Math.round(h*60); return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0"); }
 function project(lon,lat){ var r=lat*Math.PI/180; return [(lon+180)/360,(1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2]; }
 function bbox(q){ var x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; for(var i=0;i<q.length;i++){var p=q[i]; if(p[0]<x0)x0=p[0]; if(p[0]>x1)x1=p[0]; if(p[1]<y0)y0=p[1]; if(p[1]>y1)y1=p[1];} return [x0,y0,x1,y1]; }
-function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+/* Display escaping, plus Hebrew typography: the GTFS writes geresh and gershayim as ASCII
+   apostrophes (בי''ח, ג'ת) and the registry uses a straight quote (רמב"ם). On screen they
+   become ׳ and ״; exports keep the source spelling so they still join to the GTFS. */
+function heb(s){ return String(s==null?"":s).replace(/([\u05D0-\u05EA])''/g,"$1\u05F4").replace(/([\u05D0-\u05EA])"(?=[\u05D0-\u05EA])/g,"$1\u05F4").replace(/([\u05D0-\u05EA])'(?=[\u05D0-\u05EA]|\s|$)/g,"$1\u05F3"); }
+function esc(s){return heb(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 function fmtDelta(mins){ var a=Math.abs(Math.round(mins)),h=Math.floor(a/60),m=a%60; return (h?h+"h ":"")+(m||!h?m+"m":""); }
 
 /* ── classification is a function of the settings, applied at runtime ── */
@@ -499,7 +503,7 @@ function showPop(l,px,py){
   if(!l){hidePop();return;}
   delete popEl.dataset.h;
   var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":"")); if(l.nb>0)q.push(l.nb+" military base"+(l.nb>1?"s":""));
-  var cs=l.c||[], route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b> &rarr; <b>'+esc(cs[cs.length-1])+'</b>'+(cs.length>2?'<div class="cities">'+cs.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
+  var cs=l.c||[], via=cs.slice(1,-1), route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b>'+(cs.length>1?' &rarr; <b>'+esc(cs[cs.length-1])+'</b>':' <span class="dist">starts and ends in the same town</span>')+(via.length?'<div class="cities">via '+via.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
   var hosp=l.hl&&l.hl.length?'<dt>Hospitals</dt><dd class="tx he">'+l.hl.map(function(id){var d=l.hs[id]; return esc(hospName(id))+' <span class="dist">'+(d?d+' m':'at its stop')+'</span>';}).join("; ")+'</dd>':'';
   popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק"ט '+esc(l.m)+'</span></div>'+
     '<span class="pill '+st.key+'">'+esc(st.label)+'</span>'+
