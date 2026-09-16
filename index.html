@@ -36,7 +36,7 @@ button{font:inherit}
 .hdr .about:hover{background:var(--panel-2)}
 
 .app{flex:1; min-height:0; display:grid; grid-template-columns:272px minmax(0,1fr) 336px}
-.side,.insp{background:var(--panel); overflow:auto; padding:8px 14px 12px}
+.side,.insp{background:var(--panel); overflow:auto; padding:6px 14px 4px}
 .side{border-right:1px solid var(--line)} .insp{border-left:1px solid var(--line)}
 .side section{padding:5px 0 5px; border-bottom:1px solid var(--line-2)}
 .side section:last-child{border-bottom:0}
@@ -71,7 +71,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
 .seg label:has(input:checked){background:var(--panel-2); border-color:var(--ink-2); color:var(--ink)} .seg input{margin:0; accent-color:var(--hosp)}
 .rng{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--ink-2)} .rng input[type=range]{flex:1; min-width:0; accent-color:var(--hosp); margin:0} .rng output{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink); min-width:92px; text-align:right}
 .sel{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-2); margin:0 0 6px} .sel select{flex:1; min-width:0; font:inherit; font-size:11.5px; padding:3px 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink)}
-.insp .cities{font-size:11px; color:var(--muted); line-height:1.5; margin-top:2px} .insp .dist{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted)}
+.insp .cities{font-size:11px; color:var(--muted); line-height:1.5; margin-top:2px}
+.bt{border-collapse:collapse; font-size:12px; margin-top:6px; font-variant-numeric:tabular-nums} .bt th,.bt td{padding:3px 8px; border-bottom:1px solid var(--line-2); text-align:right} .bt th:first-child,.bt td:first-child{text-align:left} .bt th{font-weight:600; color:var(--ink-2)} .insp .dist{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted)}
 .fr{display:flex; align-items:center; flex-wrap:nowrap; white-space:nowrap; gap:6px; font-size:11px; color:var(--ink-2); margin:0 0 5px; line-height:1.3}
 .fr input{width:46px; padding:3px 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink); font:inherit; font-size:12px; font-family:"IBM Plex Mono",monospace; text-align:center}
 .fr input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1px}
@@ -179,8 +180,10 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <h3>Show only lines with</h3>
       <label class="fr" title="Counted on an ordinary weekday (Wednesday 27 May 2026)"><input id="minWed" type="number" min="0" step="1" value="0" aria-label="Minimum buses on a weekday"> or more buses on a weekday</label>
       <label class="fr" title="Friday departures after Shabbat starts plus Saturday departures before it ends, per the hours above"><input id="minSh" type="number" min="0" step="1" value="0" aria-label="Minimum buses during Shabbat"> or more buses during Shabbat</label>
-      <label class="sel" title="The exception the line meets by where it goes. The ministry's list does not say which exception each license rests on."><span>qualifying through</span><select id="exc" aria-label="Qualifying exception">
-        <option value="any">any exception</option><option value="hospital">a hospital</option><option value="nonjewish">a non-Jewish town</option><option value="base">a military base</option><option value="none">none of these (licensed for another reason)</option></select></label>
+      <label class="sel" title="The sub-paragraph of regulation 386א the ministry recorded for each license in its December 2024 table (cached inside the FOI workbook). Licensed lines only."><span>licensed under</span><select id="basis" aria-label="Ministry's stated license basis">
+        <option value="any">any basis (ministry, Dec 2024)</option><option value="1">§1 hospital</option><option value="2">§2 border settlement</option><option value="3">§3 non-Jewish locality</option><option value="4">§4 public security</option><option value="5">§5 maintaining service</option><option value="gb">grandfathered, 386א(ב)</option></select></label>
+      <label class="sel" title="The exception the line meets by where it goes — our test from the route, independent of the ministry's record."><span>route reaches</span><select id="exc" aria-label="Exception met by the route">
+        <option value="any">anything</option><option value="hospital">a hospital</option><option value="nonjewish">a non-Jewish town</option><option value="base">a military base</option><option value="none">none of these</option></select></label>
       <input id="q" class="search" type="search" placeholder="Find a line number or operator" autocomplete="off" aria-label="Find a line number or operator">
       <span id="fnote" hidden></span>
     </section>
@@ -241,9 +244,15 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
         <li><b>Service</b>: GTFS trips whose calendar contains the anchor date, counted once per date [3]. Summing across the feed double-counts, because MOT republishes the same buses under new schedule IDs.</li>
         <li><b>Hospital</b>: a hand-checked registry of 60 hospitals [8] &mdash; the 45 on the Ministry of Health list [10] plus 15 others (geriatric, psychiatric, East Jerusalem, a military hospital, an outpatient centre) that have a bus stop named for them. Each has a point: the OpenStreetMap hospital outline for 54 [12], the centre of its named stops for 5, a street address for 1. Stops are matched by name (hospital marker or known name, in the hospital's own city; street stops on <span class="he">דרך שיבא</span> excluded) and by straight-line distance from the point, 0&ndash;500 m, chosen in the sidebar. Default: the Ministry list, named stops only.</li>
         <li><b>Route</b>: the towns a line passes, in order, from the stops of its fullest trip (GTFS <code>stop_desc</code> "<span class="he">עיר</span>"), for the direction drawn.</li>
+        <li><b>License basis</b>: the ministry's own record, December 2024 [13] — for each Shabbat-approved line the sub-paragraph of <span class="he">386א(א)</span> it rests on and the reasoning as written, plus whether it is grandfathered under <span class="he">386א(ב)</span>. Every one of the 361 lines on the November 2025 list has one. It is shown on the card, filterable in the sidebar, and compared with where the route actually goes in the table below.</li>
         <li><b>Non-Jewish town</b>: CBS census 2022, every statistical area classified Muslim, Druze or Christian [4]; joined to GTFS stop cities by normalised Hebrew name (80% of stop&ndash;town pairs; the rest listed in the repository).</li>
         <li><b>Qualifies</b> = reaches a hospital or a non-Jewish town. Border settlements have no definition in the traffic regulations; the two "essential" exceptions have no list. Eligibility is a floor.</li>
       </ul>
+    </div>
+    <div class="card">
+      <h2>The ministry's basis against the route</h2>
+      <p>Rows: the sub-paragraph the ministry recorded for the license (Dec 2024). Columns: what the route reaches under the current hospital set and distance, and the CBS census. Licensed lines on the map only.</p>
+      <div id="basisTable" style="overflow-x:auto"></div>
     </div>
     <div class="card">
       <h2>Limits</h2>
@@ -252,7 +261,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
         <li>One weekend of timetable (29&ndash;30 May 2026) against a license list dated November 2025. Not a trend.</li>
         <li>Shabbat times are one national pair; local values differ by up to ~25 minutes (Jerusalem candle-lighting 18:57). Change them in the sidebar.</li>
         <li>Free municipal Saturday services (<span class="he">נעים בסופ״ש</span>) are absent from the national feed: no fare, so not a "service line" in law.</li>
-        <li>The ministry records which exception each license rests on and disclosed the breakdown in 2016 [5]; <b>that field is absent from the 2025 release</b> (its note column is empty in all 410 rows). "Qualifying through" in the sidebar is therefore inferred from where a route goes, never read from the license.</li>
+        <li>The released sheets carry no license-basis column, but the workbook they were built in caches the ministry's internal December 2024 table, which does [13]. It is a working table, one snapshot, with 11 duplicate rows and 3 blank sections; it was not knowingly released. "Licensed under" reads it; "route reaches" is our independent test from the timetable.</li>
         <li>The <span class="he">נעים בסופ״ש</span> corridors are the partner's mapping [11], drawn as straight lines between the two ends; the geocoding of each end is recorded in the export.</li>
       </ul>
     </div>
@@ -272,6 +281,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <li><b>Hospital list.</b> The 45 hospitals on the Ministry of Health website, as compiled by the partner (<code>data/raw/partner/moh_hospitals_45.xlsx</code>); registry with stop assignments and OSM references: <code>data/reference/hospital_registry.csv</code>.</li>
       <li><b><span class="he">נעים בסופ״ש</span> mapping.</b> Partner spreadsheet of 17 routes with ends, hospital served, overlapping licensed lines and weekday alternatives (<code>data/raw/partner/naim_basofash_routes.xlsx</code>); end-point geocoding rules: <code>data/reference/naim_basofash_endpoints.csv</code>.</li>
       <li><b>Hospital locations.</b> OpenStreetMap <code>amenity=hospital</code> ways, relations and nodes for Israel, Overpass extract of 16 Sep 2026 (<code>data/raw/partner/osm_hospitals_overpass.json</code>), centre points.</li>
+      <li><b>License basis per line.</b> Ministry of Transport internal table <span class="he">"טבלת קווי שבת דצמבר 2024"</span>, sheet <span class="he">רשימת הקווים</span>, 500 rows: cached inside the FOI workbook [2] as an Excel external-link range (<code>xl/externalLinks/externalLink3.xml</code>); extracted verbatim to <code>data/raw/embedded/mot_shabbat_lines_dec2024_embedded.csv</code>. Columns include <span class="he">סעיף בתקנה 386א</span>, <span class="he">נימוק מפורט</span>, <span class="he">מתוקף תקנה 386א(ב)</span>.</li>
     </ol>
   </section>
 </div>
@@ -298,7 +308,8 @@ var KIND={general:"general hospital",private:"private hospital",rehabilitation:"
 var NAIM_COLOR="#7A3E9D";
 var view={x:0,y:0,k:1}, home=null, pinned=null, hovered=null, hoveredAll=[], here=[], hoveredH=null, query="";
 var on={eligible_no_permit:true, permit_runs_shabbat:true, permit_evening:true, permit_after_shabbat:true, permit_no_service:true, hospitals:true, naim:true};
-var SET={inH:19+20/60, outH:20+23/60, eveH:17, minWed:0, minSh:0, hset:"core", radius:0, exc:"any"};
+var SET={inH:19+20/60, outH:20+23/60, eveH:17, minWed:0, minSh:0, hset:"core", radius:0, exc:"any", basis:"any"};
+var BASIS={"1":"hospital","2":"border settlement","3":"non-Jewish locality","4":"public security","5":"maintaining public transport"};
 var hoveredN=null, pinnedN=null;
 
 var cv=document.getElementById("map"), ctx=cv.getContext("2d");
@@ -334,8 +345,9 @@ function applyHospitals(l){ var ids=[],hs=l.hs||{}; for(var id in hs){ var h=hos
   ids.sort(function(a,b){return hs[a]-hs[b];}); l.hl=ids; l.nh=ids.length; }
 function eligible(l){ return l.nh>0||l.nnj>0; }
 function excOK(l){ var e=SET.exc; if(e==="any")return true; if(e==="hospital")return l.nh>0; if(e==="nonjewish")return l.nnj>0; if(e==="base")return l.nb>0; return !(l.nh>0||l.nnj>0||l.nb>0); }
-function passes(l){ return (l.permit||eligible(l)) && excOK(l) && l.wed>=SET.minWed && l.sh>=SET.minSh && (!query||l.match.indexOf(query)>=0); }
-function reclassify(){ lines.forEach(function(l){ applyHospitals(l); l.s=classify(l); l.sh=shabbatRides(l); }); renderStats(); renderLayers(); buildGrid(); drawBase(); requestPaint(); }
+function basisOK(l){ var b=SET.basis; if(b==="any")return true; if(!l.permit||!l.pt)return false; return b==="gb"?!!l.pt.gb:l.pt.s===b; }
+function passes(l){ return (l.permit||eligible(l)) && excOK(l) && basisOK(l) && l.wed>=SET.minWed && l.sh>=SET.minSh && (!query||l.match.indexOf(query)>=0); }
+function reclassify(){ lines.forEach(function(l){ applyHospitals(l); l.s=classify(l); l.sh=shabbatRides(l); }); renderStats(); renderLayers(); renderBasisTable(); buildGrid(); drawBase(); requestPaint(); }
 function hospLines(h){ return lines.filter(function(l){ return l.hl&&l.hl.indexOf(h.id)>=0; }); }
 function hospName(id){ var h=hospById[id]; return h?h.n:id; }
 /* metres -> world units at a latitude (Web Mercator, world width 1 = the equator's circumference) */
@@ -504,12 +516,13 @@ function showPop(l,px,py){
   delete popEl.dataset.h;
   var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":"")); if(l.nb>0)q.push(l.nb+" military base"+(l.nb>1?"s":""));
   var cs=l.c||[], via=cs.slice(1,-1), route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b>'+(cs.length>1?' &rarr; <b>'+esc(cs[cs.length-1])+'</b>':' <span class="dist">starts and ends in the same town</span>')+(via.length?'<div class="cities">via '+via.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
+  var pt=l.pt, basisRow=(l.permit&&pt)?'<dt>License basis</dt><dd class="tx">'+(pt.s?'<b>§386א(א)('+esc(pt.s)+')</b> '+esc(BASIS[pt.s]||""):'<b>no sub-paragraph recorded</b>')+(pt.gb?' &middot; grandfathered 386א(ב)':'')+(pt.r?'<div class="cities he">\u201c'+esc(pt.r)+'\u201d</div>':'')+'<div class="cities">ministry table, Dec 2024'+(pt.hist?' &middot; permit history: line '+esc(pt.hist)+' (1991\u201395)':'')+'</div></dd>':'';
   var hosp=l.hl&&l.hl.length?'<dt>Hospitals</dt><dd class="tx he">'+l.hl.map(function(id){var d=l.hs[id]; return esc(hospName(id))+' <span class="dist">'+(d?d+' m':'at its stop')+'</span>';}).join("; ")+'</dd>':'';
   popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק״ט '+esc(l.m)+'</span></div>'+
     '<span class="pill '+st.key+'">'+esc(st.label)+'</span>'+
     '<dl><dt title="Counted on an ordinary weekday, Wed '+esc(META.anchor_weekday_fmt)+'">Buses, weekday</dt><dd>'+l.wed.toLocaleString("en-US")+'</dd>'+
     '<dt>Buses, Fri</dt><dd>'+(l.fri||[]).length+'</dd><dt>Buses, Sat</dt><dd>'+(l.satT||[]).length+'</dd><dt>During Shabbat</dt><dd>'+l.sh+'</dd>'+
-    route+(q.length?'<dt>Reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+hosp+'</dl>'+
+    route+basisRow+(q.length?'<dt>Route reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+hosp+'</dl>'+
     timelineBlock(l)+'<p class="why">'+whyText(l)+'</p>';
   popEl.querySelector(".x").onclick=function(e){e.stopPropagation(); pinned=null; here=[]; hidePop(); drawBase(); requestPaint();};
   var bk=popEl.querySelector(".back"); if(bk) bk.onclick=function(e){e.stopPropagation(); pinned=null; showHere(here); drawBase(); requestPaint();}; place(); }
@@ -552,13 +565,22 @@ function renderStats(){
     '<span class="stat e" title="Licensed; first Saturday bus '+fromH(SET.eveH)+'\u2013'+fromH(SET.outH)+'"><b class="n">'+n.permit_evening+'</b><span class="l">evening</span></span>'+
     '<span class="stat a" title="Licensed; '+n.permit_after_shabbat+' start after '+fromH(SET.outH)+', '+(n.permit_no_service+absent)+' run no Saturday bus"><b class="n">'+(n.permit_after_shabbat+n.permit_no_service+absent)+'</b><span class="l">no Shabbat bus</span></span>'+
     '<span class="stat r" title="Reach a hospital ('+(SET.hset==="all"?"any of "+META.n_hospitals_all:"Ministry of Health list, "+META.n_hospitals_core)+(SET.radius?", stop within "+SET.radius+" m":", named stop")+') or a non-Jewish town, not licensed \u2014 of '+elig+' such lines"><b class="n">'+eligNo+'</b><span class="l">qualify, unlicensed</span></span>';
-  document.getElementById("tnote").innerHTML='<span style="color:#C4213F;font-weight:600">Pink</span> = Shabbat hours (Tel Aviv, '+esc(META.anchor_friday_fmt.replace(/ .*$/,""))+'\u2013'+esc(META.anchor_saturday_fmt)+'). <span style="color:#3E8FB0;font-weight:600">Blue</span> = evening: a licensed line whose first Saturday bus leaves inside it is \u201cevening only\u201d, earlier is \u201cdaytime\u201d. Drag the handles.';
+  document.getElementById("tnote").innerHTML='<span style="color:#C4213F;font-weight:600">Pink</span> = Shabbat (Tel Aviv, '+esc(META.anchor_friday_fmt.replace(/ .*$/,""))+'\u2013'+esc(META.anchor_saturday_fmt)+'). <span style="color:#3E8FB0;font-weight:600">Blue</span> = evening band \u2192 \u201cevening only\u201d.';
   var shown=lines.filter(function(l){return on[l.s]&&passes(l);}).length;
   var nH=hospitals.filter(activeHospital).length;
   document.getElementById("dlLines").textContent="Lines ("+shown.toLocaleString("en-US")+")"; document.getElementById("dlHosp").title="One row per hospital in the chosen set ("+nH+"), with its lines at the chosen distance counted by category";
   document.getElementById("radv").textContent=SET.radius?SET.radius+" m":"named stops only";
-  document.getElementById("hnote").textContent=(SET.radius?"A line counts if a stop of it is named for the hospital or lies within "+SET.radius+" m (straight line) of it.":"A line counts only if it stops at a stop named for the hospital; slide to add nearby stops.");
+  document.getElementById("hnote").textContent=(SET.radius?"Named stops + any stop within "+SET.radius+" m.":"0 m = named stops only.");
 }
+function renderBasisTable(){
+  var el=document.getElementById("basisTable"); if(!el)return;
+  var rows=[["1","§1 hospital"],["2","§2 border settlement"],["3","§3 non-Jewish locality"],["4","§4 public security"],["5","§5 maintaining service"],["","no sub-paragraph"]], lic=lines.filter(function(l){return l.permit&&l.pt;});
+  var html='<table class="bt"><tr><th>Ministry basis (Dec 2024)</th><th>licenses</th><th>route reaches a hospital</th><th>reaches a non-Jewish town</th><th>reaches neither</th><th>grandfathered 386א(ב)</th></tr>';
+  rows.forEach(function(r){ var g=lic.filter(function(l){return l.pt.s===r[0];}); if(!g.length)return;
+    html+='<tr><td>'+r[1]+'</td><td>'+g.length+'</td><td>'+g.filter(function(l){return l.nh>0;}).length+'</td><td>'+g.filter(function(l){return l.nnj>0;}).length+'</td><td>'+g.filter(function(l){return !(l.nh>0||l.nnj>0);}).length+'</td><td>'+g.filter(function(l){return l.pt.gb;}).length+'</td></tr>'; });
+  html+='<tr><th>all</th><th>'+lic.length+'</th><th>'+lic.filter(function(l){return l.nh>0;}).length+'</th><th>'+lic.filter(function(l){return l.nnj>0;}).length+'</th><th>'+lic.filter(function(l){return !(l.nh>0||l.nnj>0);}).length+'</th><th>'+lic.filter(function(l){return l.pt.gb;}).length+'</th></tr></table>';
+  html+='<p class="muted" style="font-size:12px;margin-top:6px">Hospital set: '+(SET.hset==="all"?"all "+META.n_hospitals_all:"Ministry of Health list, "+META.n_hospitals_core)+'; distance: '+(SET.radius?SET.radius+" m":"named stops only")+'. Licensed lines absent from the timetable are not counted.</p>';
+  el.innerHTML=html; }
 function renderLayers(){
   var n={}; ORDER.forEach(function(s){n[s]=0;}); lines.forEach(function(l){ if(passes(l)) n[l.s]++; });
   var eve=fromH(SET.eveH), out=fromH(SET.outH);
@@ -583,11 +605,11 @@ function readSettings(){
   SET.minWed=Math.max(0,+document.getElementById("minWed").value||0); SET.minSh=Math.max(0,+document.getElementById("minSh").value||0);
   SET.hset=(document.querySelector('input[name="hset"]:checked')||{}).value||"core";
   SET.radius=Math.max(0,Math.min(META.hospital_radius_max_m||500,+document.getElementById("rad").value||0));
-  SET.exc=document.getElementById("exc").value||"any";
+  SET.exc=document.getElementById("exc").value||"any"; SET.basis=document.getElementById("basis").value||"any";
   if(SET.eveH>SET.outH) SET.eveH=SET.outH;
   renderSlider(); reclassify(); if(pinned) showPop(pinned); else if(popEl.dataset.h){ var hh=hospById[popEl.dataset.h]; if(hh&&activeHospital(hh)) showPopH(hh); else hidePop(); }
 }
-["minWed","minSh","exc"].forEach(function(id){ document.getElementById(id).addEventListener("change",readSettings); });
+["minWed","minSh","exc","basis"].forEach(function(id){ document.getElementById(id).addEventListener("change",readSettings); });
 document.querySelectorAll('input[name="hset"]').forEach(function(r){ r.addEventListener("change",readSettings); });
 (function(){ var rad=document.getElementById("rad"), t=0; rad.addEventListener("input",function(){ document.getElementById("radv").textContent=(+rad.value)?rad.value+" m":"named stops only"; clearTimeout(t); t=setTimeout(readSettings,120); }); rad.addEventListener("change",readSettings); })();
 document.getElementById("resetT").onclick=function(){ document.getElementById("inFri").value=META.shabbat_in_fri; document.getElementById("outSat").value=META.shabbat_out_sat; document.getElementById("eveFrom").value="17:00"; readSettings(); };
@@ -635,13 +657,13 @@ function tslApply(final){ if(final){ if(TSL.pending){clearTimeout(TSL.pending);T
 
 /* ── CSV export via the downloads capability ── */
 function csvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
-function settingsHeader(){ return "# settings: shabbat_begins_fri="+fromH(SET.inH)+" shabbat_ends_sat="+fromH(SET.outH)+" evening_band_from="+fromH(SET.eveH)+" min_wed_buses="+SET.minWed+" min_shabbat_buses="+SET.minSh+" hospital_set="+(SET.hset==="all"?"all_"+META.n_hospitals_all:"moh_"+META.n_hospitals_core)+" hospital_radius_m="+SET.radius+" exception_filter="+SET.exc+(query?" search="+query:"")+
+function settingsHeader(){ return "# settings: shabbat_begins_fri="+fromH(SET.inH)+" shabbat_ends_sat="+fromH(SET.outH)+" evening_band_from="+fromH(SET.eveH)+" min_wed_buses="+SET.minWed+" min_shabbat_buses="+SET.minSh+" hospital_set="+(SET.hset==="all"?"all_"+META.n_hospitals_all:"moh_"+META.n_hospitals_core)+" hospital_radius_m="+SET.radius+" route_reaches_filter="+SET.exc+" license_basis_filter="+SET.basis+(query?" search="+query:"")+
   " | anchor_wed="+META.anchor_weekday+" anchor_fri="+META.anchor_friday+" anchor_sat="+META.anchor_saturday+" license_snapshot="+META.snapshot+" gtfs_feed="+META.gtfs_feed_date+"\n"; }
 function linesCSV(){
-  var cols=["makat","line","operator","licensed_rest_days","category","origin_city","destination_city","cities_along_route","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals_with_distance_m","n_nonjewish_towns","nonjewish_population","n_military_bases"];
+  var cols=["makat","line","operator","licensed_rest_days","category","origin_city","destination_city","cities_along_route","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals_with_distance_m","n_nonjewish_towns","nonjewish_population","n_military_bases","mot_basis_386a_section_dec2024","mot_basis_reasoning_dec2024","mot_grandfathered_386a_b","mot_permit_history_line","mot_active_dec2024","mot_active_shabbat_dec2024"];
   var rows=[settingsHeader()+cols.join(",")];
   lines.filter(function(l){return on[l.s]&&passes(l);}).forEach(function(l){ var f=l.fri||[],s=l.satT||[],cs=l.c||[];
-    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,cs[0]||"",cs[cs.length-1]||"",cs.join(" > "),l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,(l.hl||[]).map(function(id){return hospName(id)+" ("+l.hs[id]+" m)";}).join("; "),l.nnj,l.njp,l.nb].map(csvCell).join(",")); });
+    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,cs[0]||"",cs[cs.length-1]||"",cs.join(" > "),l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,(l.hl||[]).map(function(id){return hospName(id)+" ("+l.hs[id]+" m)";}).join("; "),l.nnj,l.njp,l.nb,(l.pt||{}).s||"",(l.pt||{}).r||"",l.pt?(l.pt.gb?1:0):"",(l.pt||{}).hist||"",(l.pt||{}).a24||"",(l.pt||{}).sh24||""].map(csvCell).join(",")); });
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function hospCSV(){
   var cols=["hospital_id","hospital","city","kind","moh_rank","set","point_source","lon","lat","stops_named","stops_within_500m","radius_m","n_lines","lines_daytime","lines_evening","lines_after_nightfall","lines_no_service","lines_qualify_unlicensed","line_numbers"];
@@ -715,7 +737,7 @@ function boot(){
     if(res[1]){ var v=res[1],pr=function(ring){return ring.map(function(p){return project(p[0],p[1]);});},polys=function(list){return list.map(function(c){c.q=c.p.map(function(poly){return poly.map(pr);}); return c;});};
       vmap={countries:polys(v.countries),lakes:polys(v.lakes),outside:v.countries.filter(function(c){return c.n!=="Israel"&&c.n!=="Palestine";}),
         urban:(v.urban||[]).map(function(r){var q=pr(r); return {q:q,bb:bbox(q)};}),roads:(v.roads||[[],[],[],[]]).map(function(cls){return cls.map(function(wy){var q=pr(wy); return {q:q,bb:bbox(q)};});})}; }
-    renderStats(); renderLayers(); fit(); buildGrid(); drawBase(); paint();
+    renderStats(); renderLayers(); renderBasisTable(); fit(); buildGrid(); drawBase(); paint();
     var opener=byMkt["13450"]; if(opener){ pinned=opener; drawBase(); paint(); showPop(opener); }
   }).catch(function(err){ el.innerHTML='<div style="font-size:13px;color:var(--ink-2);line-height:1.5">Could not load the map data.<br><code style="font-size:11px;word-break:break-all">'+esc(err.message)+'</code><br><button class="btn" type="button" id="retry" style="margin-top:8px">Try again</button></div>'; document.getElementById("retry").onclick=boot; });
 }
