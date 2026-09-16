@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Who Gets a Bus on Shabbat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +38,7 @@ button{font:inherit}
 .app{flex:1; min-height:0; display:grid; grid-template-columns:272px minmax(0,1fr) 336px}
 .side,.insp{background:var(--panel); overflow:auto; padding:8px 14px 12px}
 .side{border-right:1px solid var(--line)} .insp{border-left:1px solid var(--line)}
-.side section{padding:6px 0 6px; border-bottom:1px solid var(--line-2)}
+.side section{padding:5px 0 5px; border-bottom:1px solid var(--line-2)}
 .side section:last-child{border-bottom:0}
 .side h3{font-size:10px; text-transform:uppercase; letter-spacing:.09em; color:var(--muted); font-weight:600; margin-bottom:4px}
 .side details summary{list-style:none; cursor:pointer} .side details summary::-webkit-details-marker{display:none}
@@ -57,15 +58,20 @@ label.f input{display:block; width:100%; min-width:0; margin-top:2px; padding:4p
 label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1px}
 .search{width:100%; margin-top:6px; padding:6px 9px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink); font:inherit; font-size:12.5px}
 .search:focus-visible{outline:2px solid var(--nopermit); outline-offset:1px}
-.btn{display:inline-block; padding:6px 10px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink); font-size:12.5px; cursor:pointer}
+.btn{display:inline-block; padding:5px 8px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink); font-size:12px; cursor:pointer; white-space:nowrap}
 .btn:hover{background:var(--panel-2)} .btn:focus-visible{outline:2px solid var(--nopermit); outline-offset:1px}
 .btn.primary{background:var(--ink); color:#fff; border-color:var(--ink)} .btn.primary:hover{background:#333}
 .btn.sm{padding:4px 8px; font-size:11.5px}
-.btns{display:flex; flex-wrap:wrap; gap:6px}
+.btns{display:flex; flex-wrap:nowrap; gap:5px}
 .note{font-size:10.5px; color:var(--muted); margin:4px 0 0; line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .note.wrap{white-space:normal; overflow:visible}
 .tsl{position:relative; touch-action:none; cursor:pointer; margin:0; user-select:none} .tsl svg{display:block; width:100%; height:58px}
 .tsl .hd{cursor:ew-resize} .tsl .hd:focus{outline:none; stroke:var(--ink); stroke-width:2}
+.seg{display:flex; gap:4px; margin:0 0 6px} .seg label{flex:1; display:flex; align-items:center; gap:5px; font-size:11px; color:var(--ink-2); border:1px solid var(--line); border-radius:4px; padding:3px 6px; cursor:pointer; line-height:1.25}
+.seg label:has(input:checked){background:var(--panel-2); border-color:var(--ink-2); color:var(--ink)} .seg input{margin:0; accent-color:var(--hosp)}
+.rng{display:flex; align-items:center; gap:8px; font-size:11px; color:var(--ink-2)} .rng input[type=range]{flex:1; min-width:0; accent-color:var(--hosp); margin:0} .rng output{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink); min-width:92px; text-align:right}
+.sel{display:flex; align-items:center; gap:6px; font-size:11px; color:var(--ink-2); margin:0 0 6px} .sel select{flex:1; min-width:0; font:inherit; font-size:11.5px; padding:3px 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink)}
+.insp .cities{font-size:11px; color:var(--muted); line-height:1.5; margin-top:2px} .insp .dist{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--muted)}
 .fr{display:flex; align-items:center; flex-wrap:nowrap; white-space:nowrap; gap:6px; font-size:11px; color:var(--ink-2); margin:0 0 5px; line-height:1.3}
 .fr input{width:46px; padding:3px 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:var(--ink); font:inherit; font-size:12px; font-family:"IBM Plex Mono",monospace; text-align:center}
 .fr input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1px}
@@ -155,6 +161,15 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <div id="layers"></div>
     </section>
     <section>
+      <h3>Hospitals</h3>
+      <div class="seg" role="radiogroup" aria-label="Which hospitals count">
+        <label title="The 45 hospitals on the Ministry of Health list"><input type="radio" name="hset" value="core" checked> Ministry of Health list</label>
+        <label title="The 45 plus every other hospital with a bus stop named for it"><input type="radio" name="hset" value="all"> All with a named stop</label>
+      </div>
+      <div class="rng"><span>Stop within</span><input type="range" id="rad" min="0" max="500" step="25" value="0" aria-label="Straight-line distance from a stop to the hospital, metres"><output id="radv" for="rad">named stops only</output></div>
+      <p class="note wrap" id="hnote"></p>
+    </section>
+    <section>
       <h3 style="display:flex;justify-content:space-between;align-items:baseline">Shabbat times <button class="lnk" id="resetT" type="button" title="Hebcal candle-lighting and havdalah for Tel Aviv, Fri 29 &ndash; Sat 30 May 2026">restore defaults</button></h3>
       <div class="tsl" id="tsl" aria-label="Shabbat hours: drag the handles"></div>
       <input id="inFri" type="hidden"><input id="outSat" type="hidden"><input id="eveFrom" type="hidden">
@@ -164,6 +179,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <h3>Show only lines with</h3>
       <label class="fr" title="Counted on an ordinary weekday (Wednesday 27 May 2026)"><input id="minWed" type="number" min="0" step="1" value="0" aria-label="Minimum buses on a weekday"> or more buses on a weekday</label>
       <label class="fr" title="Friday departures after Shabbat starts plus Saturday departures before it ends, per the hours above"><input id="minSh" type="number" min="0" step="1" value="0" aria-label="Minimum buses during Shabbat"> or more buses during Shabbat</label>
+      <label class="sel" title="The exception the line meets by where it goes. The ministry's list does not say which exception each license rests on."><span>qualifying through</span><select id="exc" aria-label="Qualifying exception">
+        <option value="any">any exception</option><option value="hospital">a hospital</option><option value="nonjewish">a non-Jewish town</option><option value="base">a military base</option><option value="none">none of these (licensed for another reason)</option></select></label>
       <input id="q" class="search" type="search" placeholder="Find a line number or operator" autocomplete="off" aria-label="Find a line number or operator">
       <span id="fnote" hidden></span>
     </section>
@@ -171,7 +188,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <h3>Download as CSV</h3>
       <div class="btns">
         <button class="btn primary" id="dlLines" type="button" title="One row per line currently on the map; row 1 records the settings above">Lines</button>
-        <button class="btn" id="dlHosp" type="button" title="One row per hospital with its lines counted by category">Hospitals</button>
+        <button class="btn" id="dlHosp" type="button" title="One row per hospital in the chosen set, with its lines at the chosen distance counted by category">Hospitals</button>
+        <button class="btn" id="dlNaim" type="button" title="נעים בסופ&quot;ש: the partner's mapping of the free municipal weekend routes, with the geocoded ends">נעים</button>
       </div>
       <p class="note" id="dlnote"></p>
     </section>
@@ -197,7 +215,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
   </div>
 
   <aside class="insp">
-    <p class="empty" id="inspEmpty">Click a line on the map for its license status and its Friday and Saturday departures. Click a hospital marker for every line that serves it.</p>
+    <p class="empty" id="inspEmpty">Click a line for its route, license status and Friday and Saturday departures. Click a hospital marker for every line that reaches it, or a dashed corridor for a <span class="he">נעים בסופ"ש</span> route.</p>
     <div id="insp"></div>
   </aside>
 </div>
@@ -211,7 +229,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <p><span class="k" style="background:var(--eve)"></span><b>Evening only</b> &mdash; licensed; first Saturday bus inside the evening band, before Shabbat ends.</p>
       <p><span class="k" style="background:var(--after)"></span><b>After nightfall</b> &mdash; licensed; every Saturday bus departs after Shabbat ends.</p>
       <p><span class="k" style="background:var(--nopermit)"></span><b>Qualifies, never licensed</b> &mdash; reaches a hospital or a town whose residents are not Jewish; not on the license list.</p>
-      <p><span class="k" style="background:var(--hosp)"></span><b>Hospital</b> &mdash; a bus stop at a hospital.</p>
+      <p><span class="k" style="background:var(--hosp)"></span><b>Hospital</b> &mdash; one marker per hospital; filled = on the Ministry of Health list, pale = other hospitals with a stop named for them. A line reaches a hospital when it stops at a stop named for it, or within the sidebar's straight-line distance of it.</p>
+      <p><span class="k" style="background:#7A3E9D"></span><b><span class="he">נעים בסופ"ש</span></b> &mdash; free municipal weekend routes, drawn as straight corridors between their two ends [11]; not licensed lines and not in the national timetable.</p>
       <p>All bands recompute from the Shabbat window in the sidebar. Defaults are Hebcal's Tel Aviv times for the anchor dates [7].</p>
     </div>
     <div class="card">
@@ -220,7 +239,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
         <li><b>Line identity</b> is the MOT catalogue number (<span class="he">מק"ט</span>), the first field of GTFS <code>route_desc</code>; stable across snapshots where <code>route_id</code> is not.</li>
         <li><b>License</b>: the <span class="he">מק"ט</span> appears in the ministry's November 2025 sheet with the Saturday (<span class="he">ש</span>) flag [2].</li>
         <li><b>Service</b>: GTFS trips whose calendar contains the anchor date, counted once per date [3]. Summing across the feed double-counts, because MOT republishes the same buses under new schedule IDs.</li>
-        <li><b>Hospital</b>: stops whose names carry a hospital marker or a known hospital name, restricted to the hospital's own city; 184 stops grouped into 80 hospitals; list in the repository [8].</li>
+        <li><b>Hospital</b>: a hand-checked registry of 60 hospitals [8] &mdash; the 45 on the Ministry of Health list [10] plus 15 others (geriatric, psychiatric, East Jerusalem, a military hospital, an outpatient centre) that have a bus stop named for them. Each has a point: the OpenStreetMap hospital outline for 54 [12], the centre of its named stops for 5, a street address for 1. Stops are matched by name (hospital marker or known name, in the hospital's own city; street stops on <span class="he">דרך שיבא</span> excluded) and by straight-line distance from the point, 0&ndash;500 m, chosen in the sidebar. Default: the Ministry list, named stops only.</li>
+        <li><b>Route</b>: the towns a line passes, in order, from the stops of its fullest trip (GTFS <code>stop_desc</code> "<span class="he">עיר</span>"), for the direction drawn.</li>
         <li><b>Non-Jewish town</b>: CBS census 2022, every statistical area classified Muslim, Druze or Christian [4]; joined to GTFS stop cities by normalised Hebrew name (80% of stop&ndash;town pairs; the rest listed in the repository).</li>
         <li><b>Qualifies</b> = reaches a hospital or a non-Jewish town. Border settlements have no definition in the traffic regulations; the two "essential" exceptions have no list. Eligibility is a floor.</li>
       </ul>
@@ -232,7 +252,8 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
         <li>One weekend of timetable (29&ndash;30 May 2026) against a license list dated November 2025. Not a trend.</li>
         <li>Shabbat times are one national pair; local values differ by up to ~25 minutes (Jerusalem candle-lighting 18:57). Change them in the sidebar.</li>
         <li>Free municipal Saturday services (<span class="he">נעים בסופ"ש</span>) are absent from the national feed: no fare, so not a "service line" in law.</li>
-        <li>The ministry records which exception each license rests on and disclosed the breakdown in 2016 [5]; that field is absent from the 2025 release. Colours here are inferred from where routes go.</li>
+        <li>The ministry records which exception each license rests on and disclosed the breakdown in 2016 [5]; <b>that field is absent from the 2025 release</b> (its note column is empty in all 410 rows). "Qualifying through" in the sidebar is therefore inferred from where a route goes, never read from the license.</li>
+        <li>The <span class="he">נעים בסופ"ש</span> corridors are the partner's mapping [11], drawn as straight lines between the two ends; the geocoding of each end is recorded in the export.</li>
       </ul>
     </div>
   </div>
@@ -248,6 +269,9 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <li><b>Shabbat times.</b> Hebcal, Tel Aviv (geonameid 293397): candle-lighting Fri 29 May 2026 19:20, havdalah Sat 30 May 2026 20:23. Jerusalem 18:57 / 20:20; Haifa 19:11 / 20:24. <code>https://www.hebcal.com/shabbat?cfg=json&amp;geonameid=293397&amp;start=2026-05-29&amp;end=2026-05-30</code></li>
       <li><b>Reference tables and code.</b> Repository <code>reg386a</code>: <code>data/reference/gate1_hospital_stops.csv</code>, <code>out/tables/locality_unmatched_review.csv</code>, <code>DECISIONS.md</code>, <code>src/build/warehouse.py</code>.</li>
       <li><b>Basemap.</b> Roads and built-up areas &copy; OpenStreetMap contributors (ODbL), via Overpass; coastline, borders and inland water: Natural Earth.</li>
+      <li><b>Hospital list.</b> The 45 hospitals on the Ministry of Health website, as compiled by the partner (<code>data/raw/partner/moh_hospitals_45.xlsx</code>); registry with stop assignments and OSM references: <code>data/reference/hospital_registry.csv</code>.</li>
+      <li><b><span class="he">נעים בסופ"ש</span> mapping.</b> Partner spreadsheet of 17 routes with ends, hospital served, overlapping licensed lines and weekday alternatives (<code>data/raw/partner/naim_basofash_routes.xlsx</code>); end-point geocoding rules: <code>data/reference/naim_basofash_endpoints.csv</code>.</li>
+      <li><b>Hospital locations.</b> OpenStreetMap <code>amenity=hospital</code> ways, relations and nodes for Israel, Overpass extract of 16 Sep 2026 (<code>data/raw/partner/osm_hospitals_overpass.json</code>), centre points.</li>
     </ol>
   </section>
 </div>
@@ -269,10 +293,13 @@ var STATUS={
 };
 var ORDER=["eligible_no_permit","permit_runs_shabbat","permit_evening","permit_after_shabbat","permit_no_service"];
 
-var lines=[], hospitals=[], localities=[], vmap=null, byMkt={}, META={};
+var lines=[], hospitals=[], hospById={}, localities=[], naim=[], vmap=null, byMkt={}, META={};
+var KIND={general:"general hospital",private:"private hospital",rehabilitation:"rehabilitation hospital",psychiatric:"mental-health centre",geriatric:"geriatric hospital",geriatric_psychiatric:"geriatric & mental-health",children:"children's hospital",military:"military hospital",outpatient:"outpatient centre",other:"other"};
+var NAIM_COLOR="#7A3E9D";
 var view={x:0,y:0,k:1}, home=null, pinned=null, hovered=null, hoveredAll=[], here=[], hoveredH=null, query="";
-var on={eligible_no_permit:true, permit_runs_shabbat:true, permit_evening:true, permit_after_shabbat:true, permit_no_service:true, hospitals:true};
-var SET={inH:19+20/60, outH:20+23/60, eveH:17, minWed:0, minSh:0};
+var on={eligible_no_permit:true, permit_runs_shabbat:true, permit_evening:true, permit_after_shabbat:true, permit_no_service:true, hospitals:true, naim:true};
+var SET={inH:19+20/60, outH:20+23/60, eveH:17, minWed:0, minSh:0, hset:"core", radius:0, exc:"any"};
+var hoveredN=null, pinnedN=null;
 
 var cv=document.getElementById("map"), ctx=cv.getContext("2d");
 var tipEl=document.getElementById("tip"), popEl=document.getElementById("insp"), inspEmpty=document.getElementById("inspEmpty");
@@ -296,8 +323,19 @@ function classify(l){
   return "permit_runs_shabbat";
 }
 function shabbatRides(l){ var n=0,f=l.friH||[],t=l.satH||[],i; for(i=0;i<f.length;i++) if(f[i]>=SET.inH)n++; for(i=0;i<t.length;i++) if(t[i]<SET.outH)n++; return n; }
-function passes(l){ return l.wed>=SET.minWed && l.sh>=SET.minSh && (!query||l.match.indexOf(query)>=0); }
-function reclassify(){ lines.forEach(function(l){ l.s=classify(l); l.sh=shabbatRides(l); }); renderStats(); renderLayers(); buildGrid(); drawBase(); requestPaint(); }
+function activeHospital(h){ return SET.hset==="all"||h.core; }
+/* Which hospitals a line reaches, under the current hospital set and distance: a stop named
+   for the hospital (0 m) or any stop within the slider's straight-line distance of its point. */
+function applyHospitals(l){ var ids=[],hs=l.hs||{}; for(var id in hs){ var h=hospById[id]; if(h&&activeHospital(h)&&hs[id]<=SET.radius) ids.push(id); }
+  ids.sort(function(a,b){return hs[a]-hs[b];}); l.hl=ids; l.nh=ids.length; }
+function eligible(l){ return l.nh>0||l.nnj>0; }
+function excOK(l){ var e=SET.exc; if(e==="any")return true; if(e==="hospital")return l.nh>0; if(e==="nonjewish")return l.nnj>0; if(e==="base")return l.nb>0; return !(l.nh>0||l.nnj>0||l.nb>0); }
+function passes(l){ return (l.permit||eligible(l)) && excOK(l) && l.wed>=SET.minWed && l.sh>=SET.minSh && (!query||l.match.indexOf(query)>=0); }
+function reclassify(){ lines.forEach(function(l){ applyHospitals(l); l.s=classify(l); l.sh=shabbatRides(l); }); renderStats(); renderLayers(); buildGrid(); drawBase(); requestPaint(); }
+function hospLines(h){ return lines.filter(function(l){ return l.hl&&l.hl.indexOf(h.id)>=0; }); }
+function hospName(id){ var h=hospById[id]; return h?h.n:id; }
+/* metres -> world units at a latitude (Web Mercator, world width 1 = the equator's circumference) */
+function mPerUnit(lat){ return 40075016.686*Math.cos(lat*Math.PI/180); }
 
 function fit(){ var w=cv.clientWidth,h=cv.clientHeight,pad=16; var a=project(34.22,33.36),b=project(35.92,29.48);
   var k=Math.min((w-pad*2)/(b[0]-a[0]),(h-pad*2)/(b[1]-a[1])); home={k:k,x:w/2-k*(a[0]+b[0])/2,y:h/2-k*(a[1]+b[1])/2}; view={x:home.x,y:home.y,k:home.k}; }
@@ -332,9 +370,20 @@ function drawBase(){
     c.beginPath(); grp.forEach(function(l){tracePath(c,l.q,V);}); c.strokeStyle=C.halo; c.globalAlpha=.7; c.lineWidth=st.w*lw+2; c.stroke();
     c.beginPath(); grp.forEach(function(l){tracePath(c,l.q,V);}); c.strokeStyle=st.color; c.globalAlpha=pinned?.72:1; c.lineWidth=st.w*lw; c.stroke(); });
   c.globalAlpha=1;
-  if(on.hospitals){ var r=Math.min(7.5,3.2+zoomed*.45); c.lineWidth=1.9; c.strokeStyle=C.hosp;
-    for(var hI=0;hI<hospitals.length;hI++){ var p=hospitals[hI],X=p.q[0]*V.k+V.x,Y=p.q[1]*V.k+V.y; if(X<-20||X>w+20||Y<-20||Y>h+20)continue;
-      c.beginPath(); c.arc(X,Y,r,0,6.2832); c.fillStyle="#fff"; c.fill(); c.stroke();
+  if(on.naim&&naim.length){ /* schematic corridors: a straight line between the two ends, not a bus route */
+    c.save(); c.setLineDash([7,5]); c.lineCap="butt"; c.strokeStyle=NAIM_COLOR; c.lineWidth=Math.min(3,1.4+zoomed*.12); c.globalAlpha=.9;
+    for(var nI=0;nI<naim.length;nI++){ var rt=naim[nI]; if(!visible(rt.bb,V,w,h))continue; c.beginPath(); c.moveTo(rt.qa[0]*V.k+V.x,rt.qa[1]*V.k+V.y); c.lineTo(rt.qb[0]*V.k+V.x,rt.qb[1]*V.k+V.y); c.stroke(); }
+    c.setLineDash([]); c.fillStyle=NAIM_COLOR;
+    for(nI=0;nI<naim.length;nI++){ rt=naim[nI]; if(!visible(rt.bb,V,w,h))continue; [rt.qa,rt.qb].forEach(function(q){ c.beginPath(); c.arc(q[0]*V.k+V.x,q[1]*V.k+V.y,2.6,0,6.2832); c.fill(); }); }
+    if(zoomed>3.2){ c.font='700 11px "IBM Plex Mono",monospace'; c.textAlign="center"; c.textBaseline="middle";
+      for(nI=0;nI<naim.length;nI++){ rt=naim[nI]; if(!visible(rt.bb,V,w,h))continue; var mx=(rt.qa[0]+rt.qb[0])/2*V.k+V.x,my=(rt.qa[1]+rt.qb[1])/2*V.k+V.y;
+        c.lineWidth=3; c.strokeStyle=C.halo; c.strokeText(rt.k,mx,my-9); c.fillStyle=NAIM_COLOR; c.fillText(rt.k,mx,my-9); } }
+    c.restore(); }
+  if(on.hospitals){ var r=Math.min(7.5,3.2+zoomed*.45); c.lineWidth=1.9;
+    for(var hI=0;hI<hospitals.length;hI++){ var p=hospitals[hI]; if(!activeHospital(p))continue; var X=p.q[0]*V.k+V.x,Y=p.q[1]*V.k+V.y; if(X<-20||X>w+20||Y<-20||Y>h+20)continue;
+      if(SET.radius>0){ var rp=SET.radius/mPerUnit(p.y)*V.k; if(rp>=3){ c.beginPath(); c.arc(X,Y,rp,0,6.2832); c.fillStyle="rgba(27,79,216,.10)"; c.fill(); c.strokeStyle="rgba(27,79,216,.55)"; c.lineWidth=1; c.stroke(); c.lineWidth=1.9; } }
+      c.strokeStyle=p.core?C.hosp:"#7B93D6";
+      c.beginPath(); c.arc(X,Y,p.core?r:r*.8,0,6.2832); c.fillStyle="#fff"; c.fill(); c.stroke();
       c.beginPath(); c.moveTo(X-r*.45,Y); c.lineTo(X+r*.45,Y); c.moveTo(X,Y-r*.45); c.lineTo(X,Y+r*.45); c.stroke(); } }
   c.font='600 12.5px "IBM Plex Sans Hebrew",sans-serif'; c.textAlign="center"; c.textBaseline="middle";
   var minPop=zoomed>5?12000:zoomed>2.6?35000:zoomed>1.4?80000:150000, placed=[];
@@ -351,6 +400,9 @@ function paint(){
   if(baseView){ var s=view.k/baseView.k, ox=view.x-baseView.x*s, oy=view.y-baseView.y*s; ctx.drawImage(base,0,0,base.width,base.height,ox,oy,w*s,h*s); }
   if(hoveredH&&on.hospitals){ var HX=hoveredH.q[0]*view.k+view.x,HY=hoveredH.q[1]*view.k+view.y;
     ctx.beginPath(); ctx.arc(HX,HY,Math.min(7.5,3.2+view.k/home.k*.45)+5,0,6.2832); ctx.strokeStyle=C.hosp; ctx.lineWidth=2.5; ctx.stroke(); }
+  var hotN=pinnedN||hoveredN;
+  if(hotN&&on.naim){ ctx.save(); ctx.beginPath(); ctx.moveTo(hotN.qa[0]*view.k+view.x,hotN.qa[1]*view.k+view.y); ctx.lineTo(hotN.qb[0]*view.k+view.x,hotN.qb[1]*view.k+view.y);
+    ctx.strokeStyle=C.halo; ctx.lineWidth=9; ctx.stroke(); ctx.setLineDash([7,5]); ctx.strokeStyle=NAIM_COLOR; ctx.lineWidth=3.6; ctx.stroke(); ctx.restore(); }
   var hot=pinned||hovered, lw0=Math.min(3.4,Math.max(.9,Math.pow(view.k/home.k,.4))); ctx.lineJoin="round"; ctx.lineCap="round";
   var group=hoveredAll.length>1?hoveredAll:(here.length>1?here:null);
   if(group){ /* fade everything else, then trace every line that shares the road */
@@ -377,7 +429,10 @@ function buildGrid(){ grid={}; for(var a=0;a<lines.length;a++){var l=lines[a]; i
   for(var i=0;i<l.q.length-1;i++){ var x1=l.q[i][0],y1=l.q[i][1],x2=l.q[i+1][0],y2=l.q[i+1][1], n=Math.max(1,Math.ceil(Math.hypot(x2-x1,y2-y1)/GCELL));
     for(var s=0;s<=n;s++){ var t=s/n,key=Math.floor((x1+(x2-x1)*t)/GCELL)+":"+Math.floor((y1+(y2-y1)*t)/GCELL); (grid[key]||(grid[key]=[])).push([l,i]); } } } }
 function pickHospital(px,py){ if(!on.hospitals)return null; var best=null,bd=11;
-  for(var i=0;i<hospitals.length;i++){var p=hospitals[i],d=Math.hypot(p.q[0]*view.k+view.x-px,p.q[1]*view.k+view.y-py); if(d<bd){bd=d;best=p;}} return best; }
+  for(var i=0;i<hospitals.length;i++){var p=hospitals[i]; if(!activeHospital(p))continue; var d=Math.hypot(p.q[0]*view.k+view.x-px,p.q[1]*view.k+view.y-py); if(d<bd){bd=d;best=p;}} return best; }
+function pickNaim(px,py){ if(!on.naim)return null; var best=null,bd=8;
+  for(var i=0;i<naim.length;i++){ var rt=naim[i],x1=rt.qa[0]*view.k+view.x,y1=rt.qa[1]*view.k+view.y,x2=rt.qb[0]*view.k+view.x,y2=rt.qb[1]*view.k+view.y,dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy,t=L?Math.max(0,Math.min(1,((px-x1)*dx+(py-y1)*dy)/L)):0,d=Math.hypot(px-(x1+dx*t),py-(y1+dy*t)); if(d<bd){bd=d;best=rt;} }
+  return best; }
 function pick(px,py){ if(!grid)return null; var wx=(px-view.x)/view.k,wy=(py-view.y)/view.k,tol=9/view.k,gx=Math.floor(wx/GCELL),gy=Math.floor(wy/GCELL),reach=Math.ceil(tol/GCELL),best=null,bd=tol;
   for(var a=-reach;a<=reach;a++)for(var b=-reach;b<=reach;b++){ var c=grid[(gx+a)+":"+(gy+b)]; if(!c)continue;
     for(var i=0;i<c.length;i++){ var l=c[i][0],j=c[i][1]; if(!passes(l))continue; var x1=l.q[j][0],y1=l.q[j][1],x2=l.q[j+1][0],y2=l.q[j+1][1],dx=x2-x1,dy=y2-y1,L=dx*dx+dy*dy,t=L?Math.max(0,Math.min(1,((wx-x1)*dx+(wy-y1)*dy)/L)):0,d=Math.hypot(wx-(x1+dx*t),wy-(y1+dy*t)); if(d<bd){bd=d;best=l;} } }
@@ -396,7 +451,10 @@ function showTip(list,px,py){ if(!list||!list.length){tipEl.hidden=true;return;}
     (list.length>MAX?'<div class="more">+'+(list.length-MAX)+' more lines on this road \u2014 click to list them all</div>':list.length>1?'<div class="more">'+list.length+' lines share this road \u2014 click to list them</div>':'');
   tipEl.hidden=false;
   var w=cv.clientWidth,h=cv.clientHeight,bw=tipEl.offsetWidth,bh=tipEl.offsetHeight; tipEl.style.left=Math.min(Math.max(6,px+14),w-bw-6)+"px"; tipEl.style.top=Math.min(Math.max(6,py-bh-10),h-bh-6)+"px"; }
-function showTipH(h,px,py){ tipEl.innerHTML='<b>'+esc(h.n)+'</b> &nbsp;<span style="color:#7A828C">'+esc(h.c||"")+' &middot; '+h.l.length+' lines</span>'; tipEl.hidden=false;
+function showTipH(h,px,py){ var n=hospLines(h).filter(passes).length; tipEl.innerHTML='<b class="he">'+esc(h.n)+'</b> &nbsp;<span style="color:#7A828C">'+esc(h.c||"")+' &middot; '+n+' line'+(n===1?"":"s")+(SET.radius?' within '+SET.radius+' m':' at its stops')+(h.core?'':' &middot; not on the MoH list')+'</span>'; tipEl.hidden=false;
+  var w=cv.clientWidth,hh=cv.clientHeight,bw=tipEl.offsetWidth,bh=tipEl.offsetHeight; tipEl.style.left=Math.min(Math.max(6,px+14),w-bw-6)+"px"; tipEl.style.top=Math.min(Math.max(6,py-bh-10),hh-bh-6)+"px"; }
+
+function showTipN(rt,px,py){ tipEl.innerHTML='<b style="color:'+NAIM_COLOR+'">נעים בסופ"ש '+esc(rt.k)+'</b> &nbsp;<span class="he" style="color:#4A515A">'+esc(rt.a.n)+' &rarr; '+esc(rt.b.n)+'</span>'+(rt.hospital?' <span style="color:#7A828C">&middot; '+esc(rt.hospital)+'</span>':'')+'<div class="more">free municipal weekend bus — schematic corridor, click for the comparison</div>'; tipEl.hidden=false;
   var w=cv.clientWidth,hh=cv.clientHeight,bw=tipEl.offsetWidth,bh=tipEl.offsetHeight; tipEl.style.left=Math.min(Math.max(6,px+14),w-bw-6)+"px"; tipEl.style.top=Math.min(Math.max(6,py-bh-10),hh-bh-6)+"px"; }
 
 function timeline(times,day){
@@ -440,40 +498,62 @@ function showHere(list){
 function showPop(l,px,py){
   if(!l){hidePop();return;}
   delete popEl.dataset.h;
-  var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":""));
+  var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":"")); if(l.nb>0)q.push(l.nb+" military base"+(l.nb>1?"s":""));
+  var cs=l.c||[], route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b> &rarr; <b>'+esc(cs[cs.length-1])+'</b>'+(cs.length>2?'<div class="cities">'+cs.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
+  var hosp=l.hl&&l.hl.length?'<dt>Hospitals</dt><dd class="tx he">'+l.hl.map(function(id){var d=l.hs[id]; return esc(hospName(id))+' <span class="dist">'+(d?d+' m':'at its stop')+'</span>';}).join("; ")+'</dd>':'';
   popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק"ט '+esc(l.m)+'</span></div>'+
     '<span class="pill '+st.key+'">'+esc(st.label)+'</span>'+
     '<dl><dt title="Counted on an ordinary weekday, Wed '+esc(META.anchor_weekday_fmt)+'">Buses, weekday</dt><dd>'+l.wed.toLocaleString("en-US")+'</dd>'+
     '<dt>Buses, Fri</dt><dd>'+(l.fri||[]).length+'</dd><dt>Buses, Sat</dt><dd>'+(l.satT||[]).length+'</dd><dt>During Shabbat</dt><dd>'+l.sh+'</dd>'+
-    (q.length?'<dt>Reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+(l.h?'<dt>Hospitals</dt><dd class="tx he">'+esc(l.h)+'</dd>':'')+'</dl>'+
+    route+(q.length?'<dt>Reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+hosp+'</dl>'+
     timelineBlock(l)+'<p class="why">'+whyText(l)+'</p>';
   popEl.querySelector(".x").onclick=function(e){e.stopPropagation(); pinned=null; here=[]; hidePop(); drawBase(); requestPaint();};
   var bk=popEl.querySelector(".back"); if(bk) bk.onclick=function(e){e.stopPropagation(); pinned=null; showHere(here); drawBase(); requestPaint();}; place(); }
 function showPopH(h,px,py){
-  popEl.dataset.h=h.n+"|"+h.c;
+  popEl.dataset.h=h.id;
   var groups={}; ORDER.forEach(function(s){groups[s]=[];});
-  h.l.forEach(function(m){var l=byMkt[m]; if(l&&passes(l)) groups[l.s].push(l);});
+  var hl=hospLines(h).filter(passes); hl.forEach(function(l){ groups[l.s].push(l); });
   var rows=ORDER.map(function(s){var g=groups[s]; if(!g.length)return ""; g.sort(function(a,b){return b.wed-a.wed;});
-    return '<div class="hg"><span class="pill '+STATUS[s].key+'">'+esc(STATUS[s].label)+' &middot; '+g.length+'</span><div class="chips">'+g.map(function(l){return '<button class="chip" type="button" data-m="'+l.m+'" title="'+esc(l.o)+'">'+esc(l.k)+'</button>';}).join("")+'</div></div>';}).join("");
-  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button><div class="ttl he">'+esc(h.n)+'</div><div class="op"><span class="he">'+esc(h.c||"")+'</span> &middot; '+h.stops+' stop'+(h.stops>1?"s":"")+' &middot; '+h.l.length+' lines</div>'+
-    (rows||'<p class="why">No line passing the current filter stops here.</p>')+'<p class="why">Any line stopping here meets the hospital exception. Click a chip for its timetable.</p>';
+    return '<div class="hg"><span class="pill '+STATUS[s].key+'">'+esc(STATUS[s].label)+' &middot; '+g.length+'</span><div class="chips">'+g.map(function(l){var d=l.hs[h.id]; return '<button class="chip" type="button" data-m="'+l.m+'" title="'+esc(l.o)+(d?' \u00b7 '+d+' m':' \u00b7 at its stop')+'">'+esc(l.k)+'</button>';}).join("")+'</div></div>';}).join("");
+  var src=h.src==="osm"?"OpenStreetMap hospital outline":h.src==="fixed"?"street address":"centre of its named stops";
+  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button><div class="ttl he">'+esc(h.n)+'</div><div class="op"><span class="he">'+esc(h.c||"")+'</span> &middot; '+esc(KIND[h.k]||h.k)+' &middot; '+(h.core?'Ministry of Health list #'+h.r:'not on the Ministry of Health list')+'</div>'+
+    '<dl><dt>Stops named for it</dt><dd>'+h.stops+'</dd><dt>Stops within 500 m</dt><dd>'+h.near+'</dd><dt>Lines counted now</dt><dd>'+hl.length+' <span class="dist">'+(SET.radius?'within '+SET.radius+' m':'at named stops')+'</span></dd><dt>Point</dt><dd class="tx">'+src+'</dd></dl>'+
+    (rows||'<p class="why">No line passing the current filter reaches it under the current distance.</p>')+'<p class="why">A line counts for the hospital exception when it stops at a stop named for the hospital, or within the distance set in the sidebar. Click a chip for the line.</p>';
   popEl.querySelector(".x").onclick=function(e){e.stopPropagation(); hidePop();};
   popEl.querySelectorAll(".chip").forEach(function(b){b.onclick=function(e){e.stopPropagation(); focusLine(byMkt[b.getAttribute("data-m")]);};}); place(); }
+function lineChips(text){ /* line numbers mentioned in the partner's text, resolved to lines on the map when unambiguous */
+  if(!text)return ""; var ops=["מטרופולין","דן","אגד","קווים","תנופה","סופרבוס","אלקטרא אפיקים","אלקטרה אפיקים","נתיב אקספרס"], op=ops.filter(function(o){return text.indexOf(o)>=0;})[0]||null;
+  var nums=(text.match(/\d{1,3}[א-ת]?/g)||[]).filter(function(n,i,a){return a.indexOf(n)===i;}), out=[];
+  nums.forEach(function(k){ var c=lines.filter(function(l){return String(l.k)===k&&(!op||l.o.indexOf(op.replace("אלקטרא","אלקטרה"))>=0);}); if(c.length===1) out.push('<button class="chip" type="button" data-m="'+c[0].m+'" title="'+esc(c[0].o)+'">'+esc(k)+'</button>'); });
+  return out.length?'<div class="chips" style="margin-top:4px">'+out.join("")+'</div>':""; }
+function showPopN(rt){
+  delete popEl.dataset.h; popEl.dataset.n=rt.k;
+  var how=function(e){ return e.how==="stop"?"stop "+e.at:e.how==="hospital"?"the hospital "+e.at:"centre of the town's bus stops"; };
+  popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button><div class="ttl" style="color:'+NAIM_COLOR+'">נעים בסופ"ש <span class="he">'+esc(rt.k)+'</span></div><div class="op">Free municipal weekend bus &middot; not on the license list, not in the national timetable</div>'+
+    '<dl><dt>From</dt><dd class="tx he">'+esc(rt.a.n)+'</dd><dt>To</dt><dd class="tx he">'+esc(rt.b.n)+'</dd>'+(rt.hospital?'<dt>Hospital on the way</dt><dd class="tx he">'+esc(rt.hospital)+'</dd>':'')+
+    '<dt>Overlapping licensed lines</dt><dd class="tx he">'+esc(rt.overlap||"\u2014")+(rt.overlap_pct?' <span class="dist">'+esc(rt.overlap_pct)+'</span>':'')+lineChips(rt.overlap)+'</dd>'+
+    '<dt>Weekday lines between the two</dt><dd class="tx he">'+esc(rt.weekday_lines||"\u2014")+lineChips(rt.weekday_lines)+'</dd></dl>'+
+    '<p class="why">Drawn as a straight corridor between its two ends, not the bus route: the service is free, so it is not a שירות under תקנה 384 and has no license and no timetable in the national feed. Ends located from: '+esc(how(rt.a))+'; '+esc(how(rt.b))+'. Overlap and weekday comparisons are from the partner mapping [11].</p>';
+  popEl.querySelector(".x").onclick=function(e){e.stopPropagation(); pinnedN=null; delete popEl.dataset.n; hidePop(); requestPaint();};
+  popEl.querySelectorAll(".chip").forEach(function(b){b.onclick=function(e){e.stopPropagation(); pinnedN=null; focusLine(byMkt[b.getAttribute("data-m")]);};}); place(); }
 
 /* ── panel ── */
 function renderStats(){
   var n={}; ORDER.forEach(function(s){n[s]=0;}); var elig=0,eligNo=0;
-  lines.forEach(function(l){ n[l.s]++; if(l.nh>0||l.nnj>0){elig++; if(!l.permit)eligNo++;} });
+  lines.forEach(function(l){ if(!l.permit&&!eligible(l))return; n[l.s]++; if(eligible(l)){elig++; if(!l.permit)eligNo++;} });
   var absent=META.n_permits-lines.filter(function(l){return l.permit;}).length;
   document.getElementById("stats").innerHTML=
     '<span class="stat" title="Lines on the ministry\'s rest-day license list, '+esc(META.snapshot)+', of '+META.n_bus_lines.toLocaleString("en-US")+' bus lines in the feed"><b class="n">'+META.n_permits+'</b><span class="l">licensed</span></span>'+
     '<span class="stat g" title="Licensed; first Saturday bus before '+fromH(SET.eveH)+'"><b class="n">'+n.permit_runs_shabbat+'</b><span class="l">daytime</span></span>'+
     '<span class="stat e" title="Licensed; first Saturday bus '+fromH(SET.eveH)+'\u2013'+fromH(SET.outH)+'"><b class="n">'+n.permit_evening+'</b><span class="l">evening</span></span>'+
     '<span class="stat a" title="Licensed; '+n.permit_after_shabbat+' start after '+fromH(SET.outH)+', '+(n.permit_no_service+absent)+' run no Saturday bus"><b class="n">'+(n.permit_after_shabbat+n.permit_no_service+absent)+'</b><span class="l">no Shabbat bus</span></span>'+
-    '<span class="stat r" title="Reach a hospital or a non-Jewish town, not licensed \u2014 of '+elig+' such lines"><b class="n">'+eligNo+'</b><span class="l">qualify, unlicensed</span></span>';
-  document.getElementById("tnote").innerHTML='<span style="color:#C4213F;font-weight:600">Pink</span> = Shabbat hours (Tel Aviv, '+esc(META.anchor_friday_fmt.replace(/ .*$/,""))+'\u2013'+esc(META.anchor_saturday_fmt)+'). <span style="color:#3E8FB0;font-weight:600">Blue</span> = evening: a licensed line whose first Saturday bus leaves inside the blue band is \u201cevening only\u201d; before it, \u201cdaytime\u201d. Drag the handles.';
+    '<span class="stat r" title="Reach a hospital ('+(SET.hset==="all"?"any of "+META.n_hospitals_all:"Ministry of Health list, "+META.n_hospitals_core)+(SET.radius?", stop within "+SET.radius+" m":", named stop")+') or a non-Jewish town, not licensed \u2014 of '+elig+' such lines"><b class="n">'+eligNo+'</b><span class="l">qualify, unlicensed</span></span>';
+  document.getElementById("tnote").innerHTML='<span style="color:#C4213F;font-weight:600">Pink</span> = Shabbat hours (Tel Aviv, '+esc(META.anchor_friday_fmt.replace(/ .*$/,""))+'\u2013'+esc(META.anchor_saturday_fmt)+'). <span style="color:#3E8FB0;font-weight:600">Blue</span> = evening: a licensed line whose first Saturday bus leaves inside it is \u201cevening only\u201d, earlier is \u201cdaytime\u201d. Drag the handles.';
   var shown=lines.filter(function(l){return on[l.s]&&passes(l);}).length;
-  document.getElementById("dlLines").textContent="Lines ("+shown.toLocaleString("en-US")+")"; document.getElementById("dlHosp").textContent="Hospitals ("+hospitals.length+")";
+  var nH=hospitals.filter(activeHospital).length;
+  document.getElementById("dlLines").textContent="Lines ("+shown.toLocaleString("en-US")+")"; document.getElementById("dlHosp").title="One row per hospital in the chosen set ("+nH+"), with its lines at the chosen distance counted by category";
+  document.getElementById("radv").textContent=SET.radius?SET.radius+" m":"named stops only";
+  document.getElementById("hnote").textContent=(SET.radius?"A line counts if a stop of it is named for the hospital or lies within "+SET.radius+" m (straight line) of it.":"A line counts only if it stops at a stop named for the hospital; slide to add nearby stops.");
 }
 function renderLayers(){
   var n={}; ORDER.forEach(function(s){n[s]=0;}); lines.forEach(function(l){ if(passes(l)) n[l.s]++; });
@@ -485,7 +565,9 @@ function renderLayers(){
   var html="";
   ["permit_runs_shabbat","permit_evening","permit_after_shabbat","permit_no_service","eligible_no_permit"].forEach(function(s){ if(s==="permit_no_service"&&!n[s])return;
     html+='<label class="lay"><input type="checkbox" data-k="'+s+'"'+(on[s]?" checked":"")+'><span class="sw" style="background:'+STATUS[s].color+'"></span><span class="t">'+(SHORT[s]||STATUS[s].label)+'<span class="n">'+n[s].toLocaleString("en-US")+'</span></span><span class="d" title="'+DESC[s]+'">'+DESC[s]+'</span></label>'; });
-  html+='<label class="lay"><input type="checkbox" data-k="hospitals"'+(on.hospitals?" checked":"")+'><span class="sw dot" style="background:'+C.hosp+'"></span><span class="t">Hospitals<span class="n">'+hospitals.length+'</span></span><span class="d" title="bus stops named for a hospital, grouped by hospital">stops named for a hospital, grouped</span></label>';
+  var nH=hospitals.filter(activeHospital).length;
+  html+='<label class="lay"><input type="checkbox" data-k="hospitals"'+(on.hospitals?" checked":"")+'><span class="sw dot" style="background:'+C.hosp+'"></span><span class="t" title="'+(SET.hset==="all"?"Ministry of Health list + others with a named stop":"Ministry of Health list")+(SET.radius?", stops within "+SET.radius+" m":", named stops")+'">Hospitals<span class="n">'+nH+'</span></span></label>';
+  html+='<label class="lay"><input type="checkbox" data-k="naim"'+(on.naim?" checked":"")+'><span class="sw" style="background:'+NAIM_COLOR+';height:0;border-top:3px dashed '+NAIM_COLOR+'"></span><span class="t" title="free municipal weekend buses; drawn as straight corridors between their two ends">נעים בסופ"ש<span class="n">'+naim.length+'</span></span></label>';
   var el=document.getElementById("layers"); el.innerHTML=html;
 }
 document.getElementById("layers").addEventListener("change",function(e){ var k=e.target.getAttribute("data-k"); if(!k)return; on[k]=e.target.checked;
@@ -495,10 +577,15 @@ function readSettings(){
   var a=document.getElementById("inFri").value,b=document.getElementById("outSat").value,c=document.getElementById("eveFrom").value;
   if(a)SET.inH=toH(a); if(b)SET.outH=toH(b); if(c)SET.eveH=toH(c);
   SET.minWed=Math.max(0,+document.getElementById("minWed").value||0); SET.minSh=Math.max(0,+document.getElementById("minSh").value||0);
+  SET.hset=(document.querySelector('input[name="hset"]:checked')||{}).value||"core";
+  SET.radius=Math.max(0,Math.min(META.hospital_radius_max_m||500,+document.getElementById("rad").value||0));
+  SET.exc=document.getElementById("exc").value||"any";
   if(SET.eveH>SET.outH) SET.eveH=SET.outH;
-  renderSlider(); reclassify(); if(pinned) showPop(pinned); else if(popEl.dataset.h){ var hh=hospitals.filter(function(x){return x.n+"|"+x.c===popEl.dataset.h;})[0]; if(hh) showPopH(hh); }
+  renderSlider(); reclassify(); if(pinned) showPop(pinned); else if(popEl.dataset.h){ var hh=hospById[popEl.dataset.h]; if(hh&&activeHospital(hh)) showPopH(hh); else hidePop(); }
 }
-["minWed","minSh"].forEach(function(id){ document.getElementById(id).addEventListener("change",readSettings); });
+["minWed","minSh","exc"].forEach(function(id){ document.getElementById(id).addEventListener("change",readSettings); });
+document.querySelectorAll('input[name="hset"]').forEach(function(r){ r.addEventListener("change",readSettings); });
+(function(){ var rad=document.getElementById("rad"), t=0; rad.addEventListener("input",function(){ document.getElementById("radv").textContent=(+rad.value)?rad.value+" m":"named stops only"; clearTimeout(t); t=setTimeout(readSettings,120); }); rad.addEventListener("change",readSettings); })();
 document.getElementById("resetT").onclick=function(){ document.getElementById("inFri").value=META.shabbat_in_fri; document.getElementById("outSat").value=META.shabbat_out_sat; document.getElementById("eveFrom").value="17:00"; readSettings(); };
 document.getElementById("q").addEventListener("input",function(e){ query=e.target.value.trim().toLowerCase(); renderStats(); renderLayers(); drawBase(); requestPaint(); });
 
@@ -544,20 +631,25 @@ function tslApply(final){ if(final){ if(TSL.pending){clearTimeout(TSL.pending);T
 
 /* ── CSV export via the downloads capability ── */
 function csvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
-function settingsHeader(){ return "# settings: shabbat_begins_fri="+fromH(SET.inH)+" shabbat_ends_sat="+fromH(SET.outH)+" evening_band_from="+fromH(SET.eveH)+" min_wed_buses="+SET.minWed+" min_shabbat_buses="+SET.minSh+(query?" search="+query:"")+
+function settingsHeader(){ return "# settings: shabbat_begins_fri="+fromH(SET.inH)+" shabbat_ends_sat="+fromH(SET.outH)+" evening_band_from="+fromH(SET.eveH)+" min_wed_buses="+SET.minWed+" min_shabbat_buses="+SET.minSh+" hospital_set="+(SET.hset==="all"?"all_"+META.n_hospitals_all:"moh_"+META.n_hospitals_core)+" hospital_radius_m="+SET.radius+" exception_filter="+SET.exc+(query?" search="+query:"")+
   " | anchor_wed="+META.anchor_weekday+" anchor_fri="+META.anchor_friday+" anchor_sat="+META.anchor_saturday+" license_snapshot="+META.snapshot+" gtfs_feed="+META.gtfs_feed_date+"\n"; }
 function linesCSV(){
-  var cols=["makat","line","operator","licensed_rest_days","category","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals","n_nonjewish_towns","nonjewish_population"];
+  var cols=["makat","line","operator","licensed_rest_days","category","origin_city","destination_city","cities_along_route","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals_with_distance_m","n_nonjewish_towns","nonjewish_population","n_military_bases"];
   var rows=[settingsHeader()+cols.join(",")];
-  lines.filter(function(l){return on[l.s]&&passes(l);}).forEach(function(l){ var f=l.fri||[],s=l.satT||[];
-    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,l.h||"",l.nnj,l.njp].map(csvCell).join(",")); });
+  lines.filter(function(l){return on[l.s]&&passes(l);}).forEach(function(l){ var f=l.fri||[],s=l.satT||[],cs=l.c||[];
+    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,cs[0]||"",cs[cs.length-1]||"",cs.join(" > "),l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,(l.hl||[]).map(function(id){return hospName(id)+" ("+l.hs[id]+" m)";}).join("; "),l.nnj,l.njp,l.nb].map(csvCell).join(",")); });
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function hospCSV(){
-  var cols=["hospital","city","n_stops","lon","lat","n_lines","lines_daytime","lines_evening","lines_after_nightfall","lines_no_service","lines_qualify_unlicensed","line_numbers"];
+  var cols=["hospital_id","hospital","city","kind","moh_rank","set","point_source","lon","lat","stops_named","stops_within_500m","radius_m","n_lines","lines_daytime","lines_evening","lines_after_nightfall","lines_no_service","lines_qualify_unlicensed","line_numbers"];
   var rows=[settingsHeader()+cols.join(",")];
-  hospitals.forEach(function(h){ var g={}; ORDER.forEach(function(s){g[s]=0;}); var nums=[];
-    h.l.forEach(function(m){var l=byMkt[m]; if(l){g[l.s]++; nums.push(l.k);}});
-    rows.push([h.n,h.c,h.stops,h.x,h.y,h.l.length,g.permit_runs_shabbat,g.permit_evening,g.permit_after_shabbat,g.permit_no_service,g.eligible_no_permit,nums.join(" ")].map(csvCell).join(",")); });
+  hospitals.filter(activeHospital).forEach(function(h){ var g={}; ORDER.forEach(function(s){g[s]=0;}); var nums=[];
+    hospLines(h).filter(passes).forEach(function(l){ g[l.s]++; nums.push(l.k); });
+    rows.push([h.id,h.n,h.c,h.k,h.r||"",h.core?"moh":"extended",h.src,h.x,h.y,h.stops,h.near,SET.radius,nums.length,g.permit_runs_shabbat,g.permit_evening,g.permit_after_shabbat,g.permit_no_service,g.eligible_no_permit,nums.join(" ")].map(csvCell).join(",")); });
+  return "\uFEFF"+rows.join("\n")+"\n"; }
+function naimCSV(){
+  var cols=["route","from","from_located_by","from_lon","from_lat","to","to_located_by","to_lon","to_lat","hospital","overlapping_licensed_lines","overlap_pct","weekday_lines_between_the_two"];
+  var rows=["# source: partner mapping of נעים בסופ\"ש routes (xlsx); corridors are straight lines between the two ends\n"+cols.join(",")];
+  naim.forEach(function(r){ rows.push([r.k,r.a.n,r.a.how+": "+r.a.at,r.a.x,r.a.y,r.b.n,r.b.how+": "+r.b.at,r.b.x,r.b.y,r.hospital||"",r.overlap||"",r.overlap_pct||"",r.weekday_lines||""].map(csvCell).join(",")); });
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function exportCSV(name,text,btn){
   var note=document.getElementById("dlnote"), old=btn.textContent; btn.disabled=true; btn.textContent="Preparing…";
@@ -571,6 +663,7 @@ function exportCSV(name,text,btn){
   }).then(function(){ btn.disabled=false; setTimeout(function(){btn.textContent=old;},1600); }); }
 document.getElementById("dlLines").onclick=function(){ exportCSV("shabbat_bus_lines_"+META.anchor_saturday+".csv", linesCSV(), this); };
 document.getElementById("dlHosp").onclick=function(){ exportCSV("shabbat_bus_hospitals_"+META.anchor_saturday+".csv", hospCSV(), this); };
+document.getElementById("dlNaim").onclick=function(){ exportCSV("naim_basofash_corridors.csv", naimCSV(), this); };
 
 /* ── interaction ── */
 var drag=null;
@@ -579,12 +672,15 @@ cv.addEventListener("pointermove",function(e){ var r=cv.getBoundingClientRect(),
   if(drag){ var dx=e.clientX-drag.x,dy=e.clientY-drag.y; if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true; view.x=drag.vx+dx; view.y=drag.vy+dy; tipEl.hidden=true; requestPaint(); return; }
   var hh=pickHospital(px,py); if(hh){ showTipH(hh,px,py); if(hoveredH!==hh||hovered){hoveredH=hh; hovered=null; requestPaint();} return; }
   if(hoveredH){hoveredH=null; requestPaint();}
+  var nn=pickNaim(px,py); if(nn){ showTipN(nn,px,py); if(hoveredN!==nn||hovered){hoveredN=nn; hovered=null; hoveredAll=[]; requestPaint();} return; }
+  if(hoveredN){hoveredN=null; requestPaint();}
   var all=pickAll(px,py), hit=all[0]||null; showTip(all,px,py); if(hit!==hovered||all.length!==hoveredAll.length){hovered=hit; hoveredAll=all; requestPaint();} });
 cv.addEventListener("pointerup",function(e){ if(drag){ if(!drag.moved){ var r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top,hh=pickHospital(px,py);
-  if(hh){pinned=null; here=[]; showPopH(hh,px,py);} else {var all=pickAll(px,py); if(all.length>1){pinned=null; here=all; showHere(all);} else {var hit=all[0]||null; here=[]; pinned=(hit&&hit===pinned)?null:hit; showPop(pinned,px,py);}} tipEl.hidden=true; drawBase(); } else drawBase(); }
+  var nn=hh?null:pickNaim(px,py);
+  if(hh){pinned=null; pinnedN=null; here=[]; showPopH(hh,px,py);} else if(nn){pinned=null; here=[]; pinnedN=nn; showPopN(nn);} else {pinnedN=null; var all=pickAll(px,py); if(all.length>1){pinned=null; here=all; showHere(all);} else {var hit=all[0]||null; here=[]; pinned=(hit&&hit===pinned)?null:hit; showPop(pinned,px,py);}} tipEl.hidden=true; drawBase(); } else drawBase(); }
   drag=null; cv.classList.remove("dragging"); requestPaint(); });
 cv.addEventListener("pointercancel",function(){drag=null; cv.classList.remove("dragging");});
-cv.addEventListener("pointerleave",function(){ tipEl.hidden=true; if(hovered||hoveredH||hoveredAll.length){hovered=null; hoveredAll=[]; hoveredH=null; requestPaint();} });
+cv.addEventListener("pointerleave",function(){ tipEl.hidden=true; if(hovered||hoveredH||hoveredN||hoveredAll.length){hovered=null; hoveredAll=[]; hoveredH=null; hoveredN=null; requestPaint();} });
 function zoomAt(px,py,f){ var nk=Math.max(home.k*.7,Math.min(home.k*60,view.k*f)); f=nk/view.k; view.x=px-(px-view.x)*f; view.y=py-(py-view.y)*f; view.k=nk; requestPaint(); settle(); }
 cv.addEventListener("wheel",function(e){ e.preventDefault(); var r=cv.getBoundingClientRect(); zoomAt(e.clientX-r.left,e.clientY-r.top,Math.pow(.9986,e.deltaY)); },{passive:false});
 document.getElementById("zin").onclick=function(){zoomAt(cv.clientWidth/2,cv.clientHeight/2,1.7);};
@@ -608,8 +704,10 @@ function boot(){
     document.getElementById("inFri").value=META.shabbat_in_fri||"19:20"; document.getElementById("outSat").value=META.shabbat_out_sat||"20:23"; document.getElementById("eveFrom").value="17:00"; renderSlider();
     document.getElementById("sub").innerHTML="Licenses: MoT list, "+esc(fmtD(META.snapshot.replace(/-/g,"")))+" &middot; Timetables: GTFS "+esc(META.gtfs_feed_date)+" &middot; Counted Wed "+esc(META.anchor_weekday_fmt)+", Fri "+esc(META.anchor_friday_fmt)+", Sat "+esc(META.anchor_saturday_fmt);
     lines=d.lines.map(function(l){ l.q=l.p.map(function(p){return project(p[0],p[1]);}); l.bb=bbox(l.q); l.match=(l.k+" "+l.m+" "+l.o).toLowerCase(); l.permit=(l.s!=="eligible_no_permit"); l.friH=(l.fri||[]).map(toH); l.satH=(l.satT||[]).map(toH); return l; }).filter(function(l){return l.q.length>1;});
-    lines.forEach(function(l){byMkt[l.m]=l; l.s=classify(l); l.sh=shabbatRides(l);});
-    hospitals=d.hospitals.map(function(p){p.q=project(p.x,p.y); return p;}); localities=d.localities.map(function(p){p.q=project(p.x,p.y); return p;});
+    hospitals=d.hospitals.map(function(p){p.q=project(p.x,p.y); hospById[p.id]=p; return p;}); localities=d.localities.map(function(p){p.q=project(p.x,p.y); return p;});
+    naim=(d.naim||[]).map(function(r){ r.qa=project(r.a.x,r.a.y); r.qb=project(r.b.x,r.b.y); r.bb=bbox([r.qa,r.qb]); return r; });
+    document.getElementById("rad").max=META.hospital_radius_max_m||500;
+    lines.forEach(function(l){byMkt[l.m]=l; applyHospitals(l); l.s=classify(l); l.sh=shabbatRides(l);});
     if(res[1]){ var v=res[1],pr=function(ring){return ring.map(function(p){return project(p[0],p[1]);});},polys=function(list){return list.map(function(c){c.q=c.p.map(function(poly){return poly.map(pr);}); return c;});};
       vmap={countries:polys(v.countries),lakes:polys(v.lakes),outside:v.countries.filter(function(c){return c.n!=="Israel"&&c.n!=="Palestine";}),
         urban:(v.urban||[]).map(function(r){var q=pr(r); return {q:q,bb:bbox(q)};}),roads:(v.roads||[[],[],[],[]]).map(function(cls){return cls.map(function(wy){var q=pr(wy); return {q:q,bb:bbox(q)};});})}; }
@@ -617,6 +715,9 @@ function boot(){
     var opener=byMkt["13450"]; if(opener){ pinned=opener; drawBase(); paint(); showPop(opener); }
   }).catch(function(err){ el.innerHTML='<div style="font-size:13px;color:var(--ink-2);line-height:1.5">Could not load the map data.<br><code style="font-size:11px;word-break:break-all">'+esc(err.message)+'</code><br><button class="btn" type="button" id="retry" style="margin-top:8px">Try again</button></div>'; document.getElementById("retry").onclick=boot; });
 }
+/* read-only hook for automated checks: where things are on screen right now */
+window.__reg386a=function(){ return {view:view, set:SET, hospitals:hospitals.filter(activeHospital).map(function(h){return {id:h.id,n:h.n,x:h.q[0]*view.k+view.x,y:h.q[1]*view.k+view.y,lines:hospLines(h).filter(passes).length};}),
+  naim:naim.map(function(r){return {k:r.k,x:(r.qa[0]+r.qb[0])/2*view.k+view.x,y:(r.qa[1]+r.qb[1])/2*view.k+view.y};}), shown:lines.filter(function(l){return on[l.s]&&passes(l);}).length}; };
 boot();
 })();
 </script>
