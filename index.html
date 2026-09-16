@@ -231,7 +231,7 @@ label.f input:focus-visible{outline:2px solid var(--nopermit); outline-offset:1p
       <p><span class="k" style="background:var(--runs)"></span><b>Daytime</b> &mdash; licensed for rest days; first Saturday bus before the evening band.</p>
       <p><span class="k" style="background:var(--eve)"></span><b>Evening only</b> &mdash; licensed; first Saturday bus inside the evening band, before Shabbat ends.</p>
       <p><span class="k" style="background:var(--after)"></span><b>After nightfall</b> &mdash; licensed; every Saturday bus departs after Shabbat ends.</p>
-      <p><span class="k" style="background:var(--nopermit)"></span><b>Qualifies, never licensed</b> &mdash; reaches a hospital or a town whose residents are not Jewish; not on the license list.</p>
+      <p><span class="k" style="background:var(--nopermit)"></span><b>Qualifies, not licensed</b> &mdash; reaches a hospital or a town whose residents are not Jewish; not on the November 2025 license list. Three of them held a Saturday license in earlier snapshots; their cards say so.</p>
       <p><span class="k" style="background:var(--hosp)"></span><b>Hospital</b> &mdash; one marker per hospital; filled = on the Ministry of Health list, pale = other hospitals with a stop named for them. A line reaches a hospital when it stops at a stop named for it, or within the sidebar's straight-line distance of it.</p>
       <p><span class="k" style="background:#7A3E9D"></span><b><span class="he">נעים בסופ״ש</span></b> &mdash; free municipal weekend routes, drawn as straight corridors between their two ends [11]; not licensed lines and not in the national timetable.</p>
       <p>All bands recompute from the Shabbat window in the sidebar. Defaults are Hebcal's Tel Aviv times for the anchor dates [7].</p>
@@ -299,7 +299,7 @@ var STATUS={
   permit_evening      :{key:"eve",      label:"Licensed · evening only",       color:C.eve,      z:2, w:1.8},
   permit_after_shabbat:{key:"after",    label:"Licensed · after nightfall",    color:C.after,    z:4, w:2.6},
   permit_no_service   :{key:"none",     label:"Licensed · no Saturday bus",    color:"#8A93A0",  z:5, w:2.2},
-  eligible_no_permit  :{key:"nopermit", label:"Qualifies · never licensed",    color:C.nopermit, z:3, w:1.4}
+  eligible_no_permit  :{key:"nopermit", label:"Qualifies · not licensed",      color:C.nopermit, z:3, w:1.4}
 };
 var ORDER=["eligible_no_permit","permit_runs_shabbat","permit_evening","permit_after_shabbat","permit_no_service"];
 
@@ -517,12 +517,15 @@ function showPop(l,px,py){
   var st=STATUS[l.s],q=[]; if(l.nh>0)q.push(l.nh+" hospital"+(l.nh>1?"s":"")); if(l.nnj>0)q.push(l.nnj+" non-Jewish town"+(l.nnj>1?"s":"")); if(l.nb>0)q.push(l.nb+" military base"+(l.nb>1?"s":""));
   var cs=l.c||[], via=cs.slice(1,-1), route=cs.length?'<dt>Route</dt><dd class="tx he"><b>'+esc(cs[0])+'</b>'+(cs.length>1?' &rarr; <b>'+esc(cs[cs.length-1])+'</b>':' <span class="dist">starts and ends in the same town</span>')+(via.length?'<div class="cities">via '+via.map(esc).join(" \u00b7 ")+'</div>':'')+'</dd>':'';
   var pt=l.pt, basisRow=(l.permit&&pt)?'<dt>License basis</dt><dd class="tx">'+(pt.s?'<b>§386א(א)('+esc(pt.s)+')</b> '+esc(BASIS[pt.s]||""):'<b>no sub-paragraph recorded</b>')+(pt.gb?' &middot; grandfathered 386א(ב)':'')+(pt.r?'<div class="cities he">\u201c'+esc(pt.r)+'\u201d</div>':'')+'<div class="cities">ministry table, Dec 2024'+(pt.hist?' &middot; permit history: line '+esc(pt.hist)+' (1991\u201395)':'')+'</div></dd>':'';
+  var hist=""; if(!l.permit){ var bits=[]; if(l.lh&&l.lh.length) bits.push("Saturday license on the "+l.lh.map(function(x){return fmtSnap(x);}).join(", ")+" list"+(l.lh.length>1?"s":"")+"; absent from the November 2025 list.");
+    if(pt) bits.push("The ministry\u2019s December 2024 table lists it as Shabbat-approved"+(pt.s?" under §386א(א)("+esc(pt.s)+")":"")+(pt.r?" \u2014 \u201c"+esc(pt.r)+"\u201d":"")+", yet the released list carries no Saturday flag for it.");
+    if(bits.length) hist='<dt>License history</dt><dd class="tx">'+bits.join(" ")+'</dd>'; }
   var hosp=l.hl&&l.hl.length?'<dt>Hospitals</dt><dd class="tx he">'+l.hl.map(function(id){var d=l.hs[id]; return esc(hospName(id))+' <span class="dist">'+(d?d+' m':'at its stop')+'</span>';}).join("; ")+'</dd>':'';
   popEl.innerHTML='<button class="x" type="button" aria-label="Close">&times;</button>'+(here.length>1?'<button class="back" type="button">&larr; '+here.length+' lines on this road</button>':'')+'<div class="ttl he">קו '+esc(l.k)+'</div><div class="op"><span class="he">'+esc(l.o)+'</span> &middot; <span class="he">מק״ט '+esc(l.m)+'</span></div>'+
     '<span class="pill '+st.key+'">'+esc(st.label)+'</span>'+
     '<dl><dt title="Counted on an ordinary weekday, Wed '+esc(META.anchor_weekday_fmt)+'">Buses, weekday</dt><dd>'+l.wed.toLocaleString("en-US")+'</dd>'+
     '<dt>Buses, Fri</dt><dd>'+(l.fri||[]).length+'</dd><dt>Buses, Sat</dt><dd>'+(l.satT||[]).length+'</dd><dt>During Shabbat</dt><dd>'+l.sh+'</dd>'+
-    route+basisRow+(q.length?'<dt>Route reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+hosp+'</dl>'+
+    route+basisRow+hist+(q.length?'<dt>Route reaches</dt><dd class="tx">'+esc(q.join(", "))+'</dd>':'')+hosp+'</dl>'+
     timelineBlock(l)+'<p class="why">'+whyText(l)+'</p>';
   popEl.querySelector(".x").onclick=function(e){e.stopPropagation(); pinned=null; here=[]; hidePop(); drawBase(); requestPaint();};
   var bk=popEl.querySelector(".back"); if(bk) bk.onclick=function(e){e.stopPropagation(); pinned=null; showHere(here); drawBase(); requestPaint();}; place(); }
@@ -563,7 +566,7 @@ function renderStats(){
     '<span class="stat" title="Lines on the ministry\'s rest-day license list, '+esc(META.snapshot)+', of '+META.n_bus_lines.toLocaleString("en-US")+' bus lines in the feed"><b class="n">'+META.n_permits+'</b><span class="l">licensed</span></span>'+
     '<span class="stat g" title="Licensed; first Saturday bus before '+fromH(SET.eveH)+'"><b class="n">'+n.permit_runs_shabbat+'</b><span class="l">daytime</span></span>'+
     '<span class="stat e" title="Licensed; first Saturday bus '+fromH(SET.eveH)+'\u2013'+fromH(SET.outH)+'"><b class="n">'+n.permit_evening+'</b><span class="l">evening</span></span>'+
-    '<span class="stat a" title="Licensed; '+n.permit_after_shabbat+' start after '+fromH(SET.outH)+', '+(n.permit_no_service+absent)+' run no Saturday bus"><b class="n">'+(n.permit_after_shabbat+n.permit_no_service+absent)+'</b><span class="l">no Shabbat bus</span></span>'+
+    '<span class="stat a" title="Licensed; '+n.permit_after_shabbat+' start after '+fromH(SET.outH)+', '+n.permit_no_service+' run no Saturday bus, '+absent+' are absent from the timetable altogether"><b class="n">'+(n.permit_after_shabbat+n.permit_no_service+absent)+'</b><span class="l">no Shabbat bus</span></span>'+
     '<span class="stat r" title="Reach a hospital ('+(SET.hset==="all"?"any of "+META.n_hospitals_all:"Ministry of Health list, "+META.n_hospitals_core)+(SET.radius?", stop within "+SET.radius+" m":", named stop")+') or a non-Jewish town, not licensed \u2014 of '+elig+' such lines"><b class="n">'+eligNo+'</b><span class="l">qualify, unlicensed</span></span>';
   document.getElementById("tnote").innerHTML='<span style="color:#C4213F;font-weight:600">Pink</span> = Shabbat (Tel Aviv, '+esc(META.anchor_friday_fmt.replace(/ .*$/,""))+'\u2013'+esc(META.anchor_saturday_fmt)+'). <span style="color:#3E8FB0;font-weight:600">Blue</span> = evening band \u2192 \u201cevening only\u201d.';
   var shown=lines.filter(function(l){return on[l.s]&&passes(l);}).length;
@@ -660,10 +663,10 @@ function csvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v)?'"'+v.rep
 function settingsHeader(){ return "# settings: shabbat_begins_fri="+fromH(SET.inH)+" shabbat_ends_sat="+fromH(SET.outH)+" evening_band_from="+fromH(SET.eveH)+" min_wed_buses="+SET.minWed+" min_shabbat_buses="+SET.minSh+" hospital_set="+(SET.hset==="all"?"all_"+META.n_hospitals_all:"moh_"+META.n_hospitals_core)+" hospital_radius_m="+SET.radius+" route_reaches_filter="+SET.exc+" license_basis_filter="+SET.basis+(query?" search="+query:"")+
   " | anchor_wed="+META.anchor_weekday+" anchor_fri="+META.anchor_friday+" anchor_sat="+META.anchor_saturday+" license_snapshot="+META.snapshot+" gtfs_feed="+META.gtfs_feed_date+"\n"; }
 function linesCSV(){
-  var cols=["makat","line","operator","licensed_rest_days","category","origin_city","destination_city","cities_along_route","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals_with_distance_m","n_nonjewish_towns","nonjewish_population","n_military_bases","mot_basis_386a_section_dec2024","mot_basis_reasoning_dec2024","mot_grandfathered_386a_b","mot_permit_history_line","mot_active_dec2024","mot_active_shabbat_dec2024"];
+  var cols=["makat","line","operator","licensed_rest_days","category","origin_city","destination_city","cities_along_route","buses_wed","buses_fri","buses_sat","buses_during_shabbat","fri_first","fri_last","fri_last_arrival","sat_first","sat_last","n_hospitals","hospitals_with_distance_m","n_nonjewish_towns","nonjewish_population","n_military_bases","mot_basis_386a_section_dec2024","mot_basis_reasoning_dec2024","mot_grandfathered_386a_b","mot_permit_history_line","mot_active_dec2024","mot_active_shabbat_dec2024","saturday_license_snapshots"];
   var rows=[settingsHeader()+cols.join(",")];
   lines.filter(function(l){return on[l.s]&&passes(l);}).forEach(function(l){ var f=l.fri||[],s=l.satT||[],cs=l.c||[];
-    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,cs[0]||"",cs[cs.length-1]||"",cs.join(" > "),l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,(l.hl||[]).map(function(id){return hospName(id)+" ("+l.hs[id]+" m)";}).join("; "),l.nnj,l.njp,l.nb,(l.pt||{}).s||"",(l.pt||{}).r||"",l.pt?(l.pt.gb?1:0):"",(l.pt||{}).hist||"",(l.pt||{}).a24||"",(l.pt||{}).sh24||""].map(csvCell).join(",")); });
+    rows.push([l.m,l.k,l.o,l.permit?1:0,l.s,cs[0]||"",cs[cs.length-1]||"",cs.join(" > "),l.wed,f.length,s.length,l.sh,f[0]||"",f[f.length-1]||"",l.friEnd||"",s[0]||"",s[s.length-1]||"",l.nh,(l.hl||[]).map(function(id){return hospName(id)+" ("+l.hs[id]+" m)";}).join("; "),l.nnj,l.njp,l.nb,(l.pt||{}).s||"",(l.pt||{}).r||"",l.pt?(l.pt.gb?1:0):"",(l.pt||{}).hist||"",(l.pt||{}).a24||"",(l.pt||{}).sh24||"",(l.lh||[]).join(" ")].map(csvCell).join(",")); });
   return "\uFEFF"+rows.join("\n")+"\n"; }
 function hospCSV(){
   var cols=["hospital_id","hospital","city","kind","moh_rank","set","point_source","lon","lat","stops_named","stops_within_500m","radius_m","n_lines","lines_daytime","lines_evening","lines_after_nightfall","lines_no_service","lines_qualify_unlicensed","line_numbers"];
@@ -698,12 +701,13 @@ cv.addEventListener("pointermove",function(e){ var r=cv.getBoundingClientRect(),
   if(drag){ var dx=e.clientX-drag.x,dy=e.clientY-drag.y; if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true; view.x=drag.vx+dx; view.y=drag.vy+dy; tipEl.hidden=true; requestPaint(); return; }
   var hh=pickHospital(px,py); if(hh){ showTipH(hh,px,py); if(hoveredH!==hh||hovered){hoveredH=hh; hovered=null; requestPaint();} return; }
   if(hoveredH){hoveredH=null; requestPaint();}
-  var nn=pickNaim(px,py); if(nn){ showTipN(nn,px,py); if(hoveredN!==nn||hovered){hoveredN=nn; hovered=null; hoveredAll=[]; requestPaint();} return; }
+  var all=pickAll(px,py), hit=all[0]||null;
+  if(!hit){ var nn=pickNaim(px,py); if(nn){ showTipN(nn,px,py); if(hoveredN!==nn||hovered){hoveredN=nn; hovered=null; hoveredAll=[]; requestPaint();} return; } }
   if(hoveredN){hoveredN=null; requestPaint();}
-  var all=pickAll(px,py), hit=all[0]||null; showTip(all,px,py); if(hit!==hovered||all.length!==hoveredAll.length){hovered=hit; hoveredAll=all; requestPaint();} });
+  showTip(all,px,py); if(hit!==hovered||all.length!==hoveredAll.length){hovered=hit; hoveredAll=all; requestPaint();} });
 cv.addEventListener("pointerup",function(e){ if(drag){ if(!drag.moved){ var r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top,hh=pickHospital(px,py);
-  var nn=hh?null:pickNaim(px,py);
-  if(hh){pinned=null; pinnedN=null; here=[]; showPopH(hh,px,py);} else if(nn){pinned=null; here=[]; pinnedN=nn; showPopN(nn);} else {pinnedN=null; var all=pickAll(px,py); if(all.length>1){pinned=null; here=all; showHere(all);} else {var hit=all[0]||null; here=[]; pinned=(hit&&hit===pinned)?null:hit; showPop(pinned,px,py);}} tipEl.hidden=true; drawBase(); } else drawBase(); }
+  var all0=hh?[]:pickAll(px,py), nn=(hh||all0.length)?null:pickNaim(px,py);
+  if(hh){pinned=null; pinnedN=null; here=[]; showPopH(hh,px,py);} else if(nn){pinned=null; here=[]; pinnedN=nn; showPopN(nn);} else {pinnedN=null; var all=all0; if(all.length>1){pinned=null; here=all; showHere(all);} else {var hit=all[0]||null; here=[]; pinned=(hit&&hit===pinned)?null:hit; showPop(pinned,px,py);}} tipEl.hidden=true; drawBase(); } else drawBase(); }
   drag=null; cv.classList.remove("dragging"); requestPaint(); });
 cv.addEventListener("pointercancel",function(){drag=null; cv.classList.remove("dragging");});
 cv.addEventListener("pointerleave",function(){ tipEl.hidden=true; if(hovered||hoveredH||hoveredN||hoveredAll.length){hovered=null; hoveredAll=[]; hoveredH=null; hoveredN=null; requestPaint();} });
@@ -717,6 +721,7 @@ cv.addEventListener("keydown",function(e){ var s=60,d={ArrowLeft:[s,0],ArrowRigh
 new ResizeObserver(function(){ if(!home)return; var rk=view.k/home.k,dx=view.x-home.x,dy=view.y-home.y; fit(); view.k=home.k*rk; view.x=home.x+dx; view.y=home.y+dy; drawBase(); requestPaint(); }).observe(cv);
 
 /* ── boot ── */
+function fmtSnap(s){ var mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; return s?mo[+s.slice(5,7)-1]+" "+s.slice(0,4):""; }
 function fmtD(s){ return s?(+s.slice(6,8))+" "+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+s.slice(4,6)-1]+" "+s.slice(0,4):""; }
 function load(name,tries){ var url=new URL(name,document.baseURI).href;
   return fetch(url,{cache:"no-store"}).then(function(r){ if(!r.ok) throw new Error(r.status+" "+r.statusText+" for "+url); return r.json(); })
@@ -742,7 +747,7 @@ function boot(){
   }).catch(function(err){ el.innerHTML='<div style="font-size:13px;color:var(--ink-2);line-height:1.5">Could not load the map data.<br><code style="font-size:11px;word-break:break-all">'+esc(err.message)+'</code><br><button class="btn" type="button" id="retry" style="margin-top:8px">Try again</button></div>'; document.getElementById("retry").onclick=boot; });
 }
 /* read-only hook for automated checks: where things are on screen right now */
-window.__reg386a=function(){ return {view:view, set:SET, hospitals:hospitals.filter(activeHospital).map(function(h){return {id:h.id,n:h.n,x:h.q[0]*view.k+view.x,y:h.q[1]*view.k+view.y,lines:hospLines(h).filter(passes).length};}),
+window.__reg386a=function(){ return {view:view, set:SET, focus:function(m){ focusLine(byMkt[m]); }, card:function(){ return popEl.innerText; }, hospitals:hospitals.filter(activeHospital).map(function(h){return {id:h.id,n:h.n,x:h.q[0]*view.k+view.x,y:h.q[1]*view.k+view.y,lines:hospLines(h).filter(passes).length};}),
   naim:naim.map(function(r){return {k:r.k,x:(r.qa[0]+r.qb[0])/2*view.k+view.x,y:(r.qa[1]+r.qb[1])/2*view.k+view.y};}), shown:lines.filter(function(l){return on[l.s]&&passes(l);}).length}; };
 boot();
 })();
